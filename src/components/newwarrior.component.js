@@ -4,6 +4,7 @@ import { Command, Add, Dat, Div, Djn, Jmn,
     Jmp, Jmz, Mod, Mov, Mul, Seq,
     Slt, Sne, Spl, Sub } from "./corewars/instructions";
 
+// string to command dictionary
 const cmdkey = {
     'Mov': Mov,
     'Add': Add,
@@ -85,7 +86,6 @@ export default class NewWarriorComponent extends Component {
         this.onSubmit = this.onSubmit.bind(this)
         this.onSave = this.onSave.bind(this)
         this.onRun = this.onRun.bind(this)
-
 
         this.state = {
             name: '',
