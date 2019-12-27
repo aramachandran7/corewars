@@ -40,7 +40,7 @@ const displayCommands = (max)=>{
     return({listCommands})
 }
 
-const Input = () => {
+const CmdInput = () => {
     return(
         <div className='container'>
             <div className="card">
@@ -61,16 +61,26 @@ const Input = () => {
                             </div>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="pwd">Password:</label>
-                            <input type="password" className="form-control" id="pwd"> </input>
+                            <label> a_am: </label>
+                            <input type="text" required className="form-control" value={this.state.a_am} onChange={this.onChangea_am} />
                         </div>
-                        <div className="checkbox">
-                            <label><input type="checkbox"> Remember me</input></label>
+                        <div className="form-group">
+                            <label> a: </label>
+                            <input type="text" required className="form-control" value={this.state.a} onChange={this.onChangea} />
                         </div>
+                        <div className="form-group">
+                            <label> b_am: </label>
+                            <input type="text" required className="form-control" value={this.state.b_am} onChange={this.onChangeb_am} />
+                        </div>
+                        <div className="form-group">
+                            <label> b: </label>
+                            <input type="text" required className="form-control" value={this.state.b} onChange={this.onChangeb} />
+                        </div>
+
+
+
                         <button type="submit" className="btn btn-default">Submit</button>
                     </form>
-                    {/*<p className="card-text">Some example text. Some example text.</p>*/}
-                    {/*<a href="#" className="card-link">Card link</a>*/}
                 </div>
             </div>
         </div>
@@ -121,6 +131,32 @@ export default class NewWarriorComponent extends Component {
         })
     }
 
+    onChangea(e){
+        this.setState({
+            a:e.target.value
+        })
+    }
+    onChangeb(e){
+        this.setState({
+            b:e.target.value
+        })
+    }
+    onChangea_am(e){
+        this.setState({
+            a_am:e.target.value
+        })
+    }
+    onChangeb_am(e){
+        this.setState({
+            b_am:e.target.value
+        })
+    }
+    onChangeMOD(e){
+        this.setState({
+            MOD:e.target.value
+        })
+    }
+
     onChangeCmd(e){
         this.setState({
             cmd:e.target.value
@@ -129,7 +165,7 @@ export default class NewWarriorComponent extends Component {
 
 
     onRun(e){
-
+        // runs in play :)
     }
     onSave(e){
         e.preventDefault()
@@ -143,6 +179,7 @@ export default class NewWarriorComponent extends Component {
             .then(res=> console.log(res.data))
         window.location = '/'
     }
+
     onSubmit(e){
         var newCommandList = this.state.commandList
         const newCmd = new cmdkey[this.state.cmd](
@@ -178,57 +215,7 @@ export default class NewWarriorComponent extends Component {
     render(){
         return(
             <div>
-                <h3>Create New Exercise Log</h3>
-                <form onSubmit={this.onSubmit}>
-                    <div className="form-group">
-                        <label>Username: </label>
-                        <select ref="userInput"
-                                required
-                                className="form-control"
-                                value={this.state.username}
-                                onChange={this.onChangeUsername}>
-                            {
-                                this.state.users.map(function(user) {
-                                    return <option
-                                        key={user}
-                                        value={user}>{user}
-                                    </option>;
-                                })
-                            }
-                        </select>
-                    </div>
-                    <div className="form-group">
-                        <label>Description: </label>
-                        <input  type="text"
-                                required
-                                className="form-control"
-                                value={this.state.description}
-                                onChange={this.onChangeDescription}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Duration (in minutes): </label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            value={this.state.duration}
-                            onChange={this.onChangeDuration}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Date: </label>
-                        <div>
-                            <DatePicker
-                                selected={this.state.date}
-                                onChange={this.onChangeDate}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="form-group">
-                        <input type="submit" value="Create Exercise Log" className="btn btn-primary" />
-                    </div>
-                </form>
+                hello world
             </div>
         )
     }
