@@ -1,0 +1,12 @@
+.Board {
+    position: relative;
+    margin: 30px auto;
+}
+
+.Cell {
+    background: #ccc;
+    position: absolute;
+    box-sizing: border-box;
+    border: 5px solid white
+}
+

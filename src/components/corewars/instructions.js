@@ -5,7 +5,7 @@ Every single assembly instruction that we compiled into JS uses this command cla
 shares these methods, which we use to alter the memory matrix as needed.
 */
 class Command {
-    constructor(a, b, a_am, b_am, mod, memory, memory_size){
+    constructor(a, b, a_am, b_am, mod, memory_size){
         while (a < 0) {
             a += memory_size
         }
@@ -17,7 +17,6 @@ class Command {
         this.a_am = a_am
         this.b_am = b_am
         this.mod = mod
-        this.memory = memory
         this.memory_size = memory_size
         this.index = 0
         this.player_id = -1
@@ -28,7 +27,7 @@ class Command {
         this.player_id = player_id
     }
 
-    get_true_index(v, mod) {
+    get_true_index(v, mod, memory) {
         switch(mod){
             case '#':
                 return this.index
@@ -36,57 +35,61 @@ class Command {
                 return (this.index + v) % this.memory_size
             case '@': case '<': case '>':
                 var new_index = (this.index + v) % this.memory_size
-                return (new_index + this.memory[new_index].b) % this.memory_size
+                return (new_index + memory[new_index].b) % this.memory_size
             case '*': case '{': case '}':
                 var new_index = (this.index + v) % this.memory_size
-                return (new_index + this.memory[new_index].a) % this.memory_size
+                return (new_index + memory[new_index].a) % this.memory_size
             default:
                 return -1
         }
     }
 
-
-    pre(v, mod){
-        if (mod==='<'){
-            if (this.memory[this.index + v].b === 0) {
-                this.memory[this.index+v].b = this.memory_size
-            }
-            else {
-                this.memory[this.index+v].b -= 1
-            }
-        }
-        if (mod==='{'){
-            if (this.memory[this.index + v].a === 0) {
-                this.memory[this.index+v].a = this.memory_size
-            }
-            else {
-                this.memory[this.index+v].a -= 1
-            }
-        }
-    }
-
-    post(v,mod){
-        if (mod==='}'){
-            this.memory[this.index+v].a = (this.memory[this.index + v].a + 1) % this.memory_size
-        }
-        if (mod==='>'){
-            this.memory[this.index+v].b = (this.memory[this.index + v].b + 1) % this.memory_size
+    pre(v, mod, memory){
+        switch(mod) {
+            case "<":
+                if (memory[this.index + v].b === 0)
+                    memory[this.index + v].b = this.memory_size
+                else
+                    memory[this.index + v].b -= 1
+                break
+            case "{":
+                if (memory[this.index + v].a === 0)
+                    memory[this.index + v].a = this.memory_size
+                else
+                    memory[this.index + v].a -= 1
+                break
+            default:
+                break
         }
     }
 
-    call(processes, process_index, gen, p){
-
-        this.pre(this.a, this.a_am)
-        this.pre(this.b, this.b_am)
-
-        this._call(processes, process_index, gen, p)
-
-        this.post(this.a, this.a_am)
-        this.post(this.b, this.b_am)
+    post(v, mod, memory){
+        switch(mod) {
+            case "}":
+                memory[this.index + v].a = (memory[this.index + v].a + 1) % this.memory_size
+                break
+            case ">":
+                memory[this.index + v].b = (memory[this.index + v].b + 1) % this.memory_size
+                break
+            default:
+                break
+        }
     }
 
-    _call(processes, process_index, gen, p){}
+    call(memory, processes, current, p){
 
+        this.pre(this.a, this.a_am, memory)
+        this.pre(this.b, this.b_am, memory)
+
+        const [new_memory, new_processes, new_current] = this._call(memory, processes, current, p)
+
+        this.post(this.a, this.a_am, memory)
+        this.post(this.b, this.b_am, memory)
+
+        return [new_memory, new_processes, new_current]
+    }
+
+    _call(memory, processes, current, p){}
     values(){return({a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
 
 }
@@ -108,43 +111,49 @@ class Add extends Command {
         return ret % this.memory_size
     }
 
-    _call(processes, process_index,gen, p){
-        var source = this.get_true_index(this.a, this.a_am)
-        var dest = this.get_true_index(this.b, this.b_am)
+    _call(memory, processes, current, p){
+        var source = this.get_true_index(this.a, this.a_am, memory)
+        var dest = this.get_true_index(this.b, this.b_am, memory)
+
         switch(this.mod){
             case "A":
-                this.memory[dest].a = this._add(this.memory[source].a, this.memory[dest].a)
+                memory[dest].a = this._add(memory[source].a, memory[dest].a)
                 break
             case "B":
-                this.memory[dest].b = this._add(this.memory[source].b, this.memory[dest].b)
+                memory[dest].b = this._add(memory[source].b, memory[dest].b)
                 break
             case "AB":
-                this.memory[dest].b = this._add(this.memory[source].a, this.memory[dest].b)
+                memory[dest].b = this._add(memory[source].a, memory[dest].b)
                 break
             case "BA":
-                this.memory[dest].a = this._add(this.memory[source].b, this.memory[dest].a)
+                memory[dest].a = this._add(memory[source].b, memory[dest].a)
                 break
             case "F": case "I":
-                this.memory[dest].a = this._add(this.memory[source].a, this.memory[dest].a)
-                this.memory[dest].b = this._add(this.memory[source].b, this.memory[dest].b)
+                memory[dest].a = this._add(memory[source].a, memory[dest].a)
+                memory[dest].b = this._add(memory[source].b, memory[dest].b)
                 break
             case "X":
-                let [s_a, s_b] = [this.memory[source].a, this.memory[source].b]
-                let [d_a, d_b] = [this.memory[dest].a, this.memory[dest].b]
-                this.memory[dest].a = this._add(s_b, d_a)
-                this.memory[dest].b = this._add(s_a, d_b)
+                let [s_a, s_b] = [memory[source].a, memory[source].b]
+                let [d_a, d_b] = [memory[dest].a, memory[dest].b]
+                memory[dest].a = this._add(s_b, d_a)
+                memory[dest].b = this._add(s_a, d_b)
                 break
             default:
                 break
         }
-        processes[process_index] = (processes[process_index] + 1) % this.memory_size
+
+        processes[current] = (processes[current] + 1) % this.memory_size
+        current += 1
+        return [memory, processes, current]
     }
 }
 
 //dat
 class Dat extends Command {
-    _call(processes, process_index,gen, p){
-        processes.splice(process_index,1)
+    _call(memory, processes, current, p){
+        processes.splice(current, 1)
+        current += 1
+        return [memory, processes, current]
     }
 }
 
@@ -155,251 +164,254 @@ class Div extends Command {
         this._flag = false
     }
 
-    _div(source, target, processes, process_index){
+    _div(source, target, processes, current){
         if (source === 0 && !this._flag) {
-            processes.splice(process_index,1)
+            processes.splice(current,1)
             this._flag = true
             return target
         }
         return (target / source) >> 0
     }
 
-    _call(processes, process_index, gen, p){
-        var source = this.get_true_index(this.a, this.a_am)
-        var dest = this.get_true_index(this.b, this.b_am)
+    _call(memory, processes, current, p){
+        var source = this.get_true_index(this.a, this.a_am, memory)
+        var dest = this.get_true_index(this.b, this.b_am, memory)
         switch(this.mod){
             case "A":
-                this.memory[dest].a = this._div(this.memory[source].a, this.memory[dest].a, processes, process_index)
+                memory[dest].a = this._div(memory[source].a, memory[dest].a, processes, current)
                 break
             case "B":
-                this.memory[dest].b = this._div(this.memory[source].b, this.memory[dest].b, processes, process_index)
+                memory[dest].b = this._div(memory[source].b, memory[dest].b, processes, current)
                 break
             case "AB":
-                this.memory[dest].b = this._div(this.memory[source].a, this.memory[dest].b, processes, process_index)
+                memory[dest].b = this._div(memory[source].a, memory[dest].b, processes, current)
                 break
             case "BA":
-                this.memory[dest].a = this._div(this.memory[source].b, this.memory[dest].a, processes, process_index)
+                memory[dest].a = this._div(memory[source].b, memory[dest].a, processes, current)
                 break
             case "F": case "I":
-                this.memory[dest].a = this._div(this.memory[source].a, this.memory[dest].a, processes, process_index)
-                this.memory[dest].b = this._div(this.memory[source].b, this.memory[dest].b, processes, process_index)
+                memory[dest].a = this._div(memory[source].a, memory[dest].a, processes, current)
+                memory[dest].b = this._div(memory[source].b, memory[dest].b, processes, current)
                 break
             case "X":
-                let [s_a, s_b] = [this.memory[source].a, this.memory[source].b]
-                let [d_a, d_b] = [this.memory[dest].a, this.memory[dest].b]
-                this.memory[dest].a = this._div(s_b, d_a, processes, process_index)
-                this.memory[dest].b = this._div(s_a, d_b, processes, process_index)
+                let [s_a, s_b] = [memory[source].a, memory[source].b]
+                let [d_a, d_b] = [memory[dest].a, memory[dest].b]
+                memory[dest].a = this._div(s_b, d_a, processes, current)
+                memory[dest].b = this._div(s_a, d_b, processes, current)
                 break
             default:
                 break
         }
-        if (!this._flag) {
-            processes[process_index] = (processes[process_index] + 1) % this.memory_size
-        }
+        if (!this._flag)
+            processes[current] = (processes[current] + 1) % this.memory_size
         this._flag = false
+        current += 1
+        return [memory, processes, current]
     }
 }
 
 //djn
 class Djn extends Command {
-    _cond(cond, processes, process_index, dest) {
-        if (cond) {
-            processes[process_index] = dest
-        }
-        else {
-            processes[process_index] = (processes[process_index] + 1) % this.memory_size
-        }
+    _cond(cond, processes, current, dest) {
+        if (cond)
+            processes[current] = dest
+        else
+            processes[current] = (processes[current] + 1) % this.memory_size
     }
 
-    _call(processes, process_index, gen, p){
-        var dest = this.get_true_index(this.a, this.a_am)
-        var check = this.get_true_index(this.b, this.b_am)
+    _call(memory, processes, current, p){
+        var dest = this.get_true_index(this.a, this.a_am, memory)
+        var check = this.get_true_index(this.b, this.b_am, memory)
         switch(this.mod){
             case 'A': case 'BA':
-                this.memory[check].a -= 1
-                if (this.memory[check].a < 0)
-                    this.memory[check].a += this.memory_size
-                this._cond((this.memory[check].a !== 0), processes, process_index, dest)
+                memory[check].a -= 1
+                if (memory[check].a < 0)
+                    memory[check].a += this.memory_size
+                this._cond((memory[check].a !== 0), processes, current, dest)
                 break
             case 'B': case 'AB':
-                this.memory[check].b -= 1
-                if (this.memory[check].b < 0)
-                    this.memory[check].b += this.memory_size
-                this._cond((this.memory[check].b !== 0), processes, process_index, dest)
+                memory[check].b -= 1
+                if (memory[check].b < 0)
+                    memory[check].b += this.memory_size
+                this._cond((memory[check].b !== 0), processes, current, dest)
                 break
             case 'I': case 'X': case 'F':
-                this.memory[check].a -= 1
-                this.memory[check].b -= 1
-                if (this.memory[check].a < 0)
-                    this.memory[check].a += this.memory_size
-                if (this.memory[check].b < 0)
-                    this.memory[check].b += this.memory_size
-                this._cond((this.memory[check].a !== 0 || this.memory[check].b !== 0), processes, process_index, dest)
+                memory[check].a -= 1
+                memory[check].b -= 1
+                if (memory[check].a < 0)
+                    memory[check].a += this.memory_size
+                if (memory[check].b < 0)
+                    memory[check].b += this.memory_size
+                this._cond((memory[check].a !== 0 || memory[check].b !== 0), processes, current, dest)
                 break
             default:
                 break
         }
-
+        current += 1
+        return [memory, processes, current]
     }
 }
 
 //jmn
 class Jmn extends Command {
-    _cond(cond, processes, process_index, dest) {
-        if (cond) {
-            processes[process_index] = dest
-        }
-        else {
-            processes[process_index] = (processes[process_index] + 1) % this.memory_size
-        }
+    _cond(cond, processes, current, dest) {
+        if (cond)
+            processes[current] = dest
+        else
+            processes[current] = (processes[current] + 1) % this.memory_size
     }
 
-    _call(processes, process_index, gen, p){
-        var dest = this.get_true_index(this.a, this.a_am)
-        var check = this.get_true_index(this.b, this.b_am)
+    _call(memory, processes, current, p){
+        var dest = this.get_true_index(this.a, this.a_am, memory)
+        var check = this.get_true_index(this.b, this.b_am, memory)
         switch(this.mod){
             case 'A': case 'BA':
-                this._cond((this.memory[check].a !== 0), processes, process_index, dest)
+                this._cond((memory[check].a !== 0), processes, current, dest)
                 break
             case 'B': case 'AB':
-                this._cond((this.memory[check].b !== 0), processes, process_index, dest)
+                this._cond((memory[check].b !== 0), processes, current, dest)
                 break
             case 'I': case 'X': case 'F':
-                this._cond((this.memory[check].a !== 0 || this.memory[check].b !== 0), processes, process_index, dest)
+                this._cond((memory[check].a !== 0 || memory[check].b !== 0), processes, current, dest)
                 break
             default:
                 break
         }
-
+        current += 1
+        return [memory, processes, current]
     }
 }
 
 //jmp
 class Jmp extends Command {
-    _call(processes, process_index, gen, p){
-        var destination_index = this.get_true_index(this.a, this.a_am)
-        processes[process_index] = destination_index
+    _call(memory, processes, current, p){
+        var destination_index = this.get_true_index(this.a, this.a_am, memory)
+        processes[current] = destination_index
+        current += 1
+        return [memory, processes, current]
     }
 }
 
 //jmz
 class Jmz extends Command {
-    _cond(cond, processes, process_index, dest) {
-        if (cond) {
-            processes[process_index] = dest
-        }
-        else {
-            processes[process_index] = (processes[process_index] + 1) % this.memory_size
-        }
+    _cond(cond, processes, current, dest) {
+        if (cond)
+            processes[current] = dest
+        else
+            processes[current] = (processes[current] + 1) % this.memory_size
     }
 
-    _call(processes, process_index, gen, p){
-        var dest = this.get_true_index(this.a, this.a_am)
-        var check = this.get_true_index(this.b, this.b_am)
+    _call(memory, processes, current, p){
+        var dest = this.get_true_index(this.a, this.a_am, memory)
+        var check = this.get_true_index(this.b, this.b_am, memory)
         switch(this.mod){
             case 'A': case 'BA':
-                this._cond((this.memory[check].a === 0), processes, process_index, dest)
+                this._cond((memory[check].a === 0), processes, current, dest)
                 break
             case 'B': case 'AB':
-                this._cond((this.memory[check].b === 0), processes, process_index, dest)
+                this._cond((memory[check].b === 0), processes, current, dest)
                 break
             case 'I': case 'X': case 'F':
-                this._cond((this.memory[check].a === 0 && this.memory[check].b === 0), processes, process_index, dest)
+                this._cond((memory[check].a === 0 && memory[check].b === 0), processes, current, dest)
                 break
             default:
                 break
         }
-
+        current += 1
+        return [memory, processes, current]
     }
 }
 
 //mod
 class Mod extends Command {
-    _mod(source, target, processes, process_index){
+    _mod(source, target, processes, current){
         if (source === 0 && !this._flag) {
-            processes.splice(process_index,1)
+            processes.splice(current,1)
             this._flag = true
             return target
         }
         return target % source
     }
 
-    _call(processes, process_index, gen, p){
-        var source = this.get_true_index(this.a, this.a_am)
-        var dest = this.get_true_index(this.b, this.b_am)
+    _call(memory, processes, current, p){
+        var source = this.get_true_index(this.a, this.a_am, memory)
+        var dest = this.get_true_index(this.b, this.b_am, memory)
         switch(this.mod){
             case "A":
-                this.memory[dest].a = this._mod(this.memory[source].a, this.memory[dest].a, processes, process_index)
+                memory[dest].a = this._mod(memory[source].a, memory[dest].a, processes, current)
                 break
             case "B":
-                this.memory[dest].b = this._mod(this.memory[source].b, this.memory[dest].b, processes, process_index)
+                memory[dest].b = this._mod(memory[source].b, memory[dest].b, processes, current)
                 break
             case "AB":
-                this.memory[dest].b = this._mod(this.memory[source].a, this.memory[dest].b, processes, process_index)
+                memory[dest].b = this._mod(memory[source].a, memory[dest].b, processes, current)
                 break
             case "BA":
-                this.memory[dest].a = this._mod(this.memory[source].b, this.memory[dest].a, processes, process_index)
+                memory[dest].a = this._mod(memory[source].b, memory[dest].a, processes, current)
                 break
             case "F": case "I":
-                this.memory[dest].a = this._mod(this.memory[source].a, this.memory[dest].a, processes, process_index)
-                this.memory[dest].b = this._mod(this.memory[source].b, this.memory[dest].b, processes, process_index)
+                memory[dest].a = this._mod(memory[source].a, memory[dest].a, processes, current)
+                memory[dest].b = this._mod(memory[source].b, memory[dest].b, processes, current)
                 break
             case "X":
-                let [s_a, s_b] = [this.memory[source].a, this.memory[source].b]
-                let [d_a, d_b] = [this.memory[dest].a, this.memory[dest].b]
-                this.memory[dest].a = this._mod(s_b, d_a, processes, process_index)
-                this.memory[dest].b = this._mod(s_a, d_b, processes, process_index)
+                let [s_a, s_b] = [memory[source].a, memory[source].b]
+                let [d_a, d_b] = [memory[dest].a, memory[dest].b]
+                memory[dest].a = this._mod(s_b, d_a, processes, current)
+                memory[dest].b = this._mod(s_a, d_b, processes, current)
                 break
             default:
                 break
         }
         if (!this._flag) {
-            processes[process_index] = (processes[process_index] + 1) % this.memory_size
+            processes[current] = (processes[current] + 1) % this.memory_size
         }
         this._flag = false
+        current += 1
+        return [memory, processes, current]
     }
 }
 
 //mov
 class Mov extends Command {
-    _call(processes, process_index, gen, p){
-        var source = this.get_true_index(this.a, this.a_am)
-        var destination = this.get_true_index(this.b, this.b_am)
+    _call(memory, processes, current, p){
+        var source = this.get_true_index(this.a, this.a_am, memory)
+        var destination = this.get_true_index(this.b, this.b_am, memory)
         switch(this.mod){
             case 'A':
                 //moves the A-field of the source into the A-field of the destination
-                this.memory[destination].a = this.memory[source].a
+                memory[destination].a = memory[source].a
                 break
             case 'B':
-                this.memory[destination].b = this.memory[source].b
+                memory[destination].b = memory[source].b
                 break
             case 'AB':
-                this.memory[destination].b = this.memory[source].a
+                memory[destination].b = memory[source].a
                 break
             case 'BA':
-                this.memory[destination].a = this.memory[source].b
+                memory[destination].a = memory[source].b
                 break
             case 'I':
-                var orig = this.memory[source]
-                this.memory[destination] = Object.assign(Object.create(Object.getPrototypeOf(orig)), orig)
-                this.memory[destination].index = destination
-                this.memory[destination].player_id = p
+                var orig = memory[source]
+                memory[destination] = Object.assign(Object.create(Object.getPrototypeOf(orig)), orig)
+                memory[destination].index = destination
+                memory[destination].player_id = p
                 break
             case 'F':
-                this.memory[destination].a = this.memory[source].a
-                this.memory[destination].b = this.memory[source].b
+                memory[destination].a = memory[source].a
+                memory[destination].b = memory[source].b
                 break
             case 'X':
-                let [s_a, s_b] = [this.memory[source].a, this.memory[source].b]
-                this.memory[destination].a = s_b
-                this.memory[destination].b = s_a
+                let [s_a, s_b] = [memory[source].a, memory[source].b]
+                memory[destination].a = s_b
+                memory[destination].b = s_a
                 break
             default:
                 break
         }
         // incrementing by one, after the move
-        processes[process_index] = (processes[process_index] + 1) % this.memory_size
-
+        processes[current] = (processes[current] + 1) % this.memory_size
+        current += 1
+        return [memory, processes, current]
     }
 }
 
@@ -410,36 +422,38 @@ class Mul extends Command {
         return ret % this.memory_size
     }
 
-    _call(processes, process_index, gen, p){
-        var source = this.get_true_index(this.a, this.a_am)
-        var dest = this.get_true_index(this.b, this.b_am)
+    _call(memory, processes, current, p){
+        var source = this.get_true_index(this.a, this.a_am, memory)
+        var dest = this.get_true_index(this.b, this.b_am, memory)
         switch(this.mod){
             case "A":
-                this.memory[dest].a = this._mul(this.memory[source].a, this.memory[dest].a)
+                memory[dest].a = this._mul(memory[source].a, memory[dest].a)
                 break
             case "B":
-                this.memory[dest].b = this._mul(this.memory[source].b, this.memory[dest].b)
+                memory[dest].b = this._mul(memory[source].b, memory[dest].b)
                 break
             case "AB":
-                this.memory[dest].b = this._mul(this.memory[source].a, this.memory[dest].b)
+                memory[dest].b = this._mul(memory[source].a, memory[dest].b)
                 break
             case "BA":
-                this.memory[dest].a = this._mul(this.memory[source].b, this.memory[dest].a)
+                memory[dest].a = this._mul(memory[source].b, memory[dest].a)
                 break
             case "F": case "I":
-                this.memory[dest].a = this._mul(this.memory[source].a, this.memory[dest].a)
-                this.memory[dest].b = this._mul(this.memory[source].b, this.memory[dest].b)
+                memory[dest].a = this._mul(memory[source].a, memory[dest].a)
+                memory[dest].b = this._mul(memory[source].b, memory[dest].b)
                 break
             case "X":
-                let [s_a, s_b] = [this.memory[source].a, this.memory[source].b]
-                let [d_a, d_b] = [this.memory[dest].a, this.memory[dest].b]
-                this.memory[dest].a = this._mul(s_b, d_a)
-                this.memory[dest].b = this._mul(s_a, d_b)
+                let [s_a, s_b] = [memory[source].a, memory[source].b]
+                let [d_a, d_b] = [memory[dest].a, memory[dest].b]
+                memory[dest].a = this._mul(s_b, d_a)
+                memory[dest].b = this._mul(s_a, d_b)
                 break
             default:
                 break
         }
-        processes[process_index] = (processes[process_index] + 1) % this.memory_size
+        processes[current] = (processes[current] + 1) % this.memory_size
+        current += 1
+        return [memory, processes, current]
     }
 }
 
@@ -455,88 +469,87 @@ class Seq extends Command {
         return true
     }
 
-    _compare(cond, processes, process_index) {
-        if (cond){
-            processes[process_index] = (processes[process_index] + 2) % this.memory_size
-        }
-        else {
-            processes[process_index] = (processes[process_index] + 1) % this.memory_size
-        }
+    _compare(cond, processes, current) {
+        if (cond)
+            processes[current] = (processes[current] + 2) % this.memory_size
+        else
+            processes[current] = (processes[current] + 1) % this.memory_size
     }
 
-    _call(processes, process_index, gen, p){
-        var acheck = this.get_true_index(this.a, this.a_am)
-        var bcheck = this.get_true_index(this.b, this.b_am)
+    _call(memory, processes, current, p){
+        var acheck = this.get_true_index(this.a, this.a_am, memory)
+        var bcheck = this.get_true_index(this.b, this.b_am, memory)
         switch(this.mod){
             case 'A':
-                this._compare((this.memory[acheck].a === this.memory[bcheck].a), processes, process_index)
+                this._compare((memory[acheck].a === memory[bcheck].a), processes, current)
                 break
             case 'B':
-                this._compare((this.memory[acheck].b === this.memory[bcheck].b), processes, process_index)
+                this._compare((memory[acheck].b === memory[bcheck].b), processes, current)
                 break
             case 'AB':
-                this._compare((this.memory[acheck].a === this.memory[bcheck].b), processes, process_index)
+                this._compare((memory[acheck].a === memory[bcheck].b), processes, current)
                 break
             case 'BA':
-                this._compare((this.memory[acheck].b === this.memory[bcheck].a), processes, process_index)
+                this._compare((memory[acheck].b === memory[bcheck].a), processes, current)
                 break
             case 'F':
-                var cond = (this.memory[acheck].a === this.memory[bcheck].a) && (this.memory[acheck].b === this.memory[bcheck].b)
-                this._compare(cond, processes, process_index)
+                var cond = (memory[acheck].a === memory[bcheck].a) && (memory[acheck].b === memory[bcheck].b)
+                this._compare(cond, processes, current)
                 break
             case 'I':
-                var cond = this._compare_commands(this.memory[acheck], this.memory[bcheck])
-                this._compare(cond, processes, process_index)
+                var cond = this._compare_commands(memory[acheck], memory[bcheck])
+                this._compare(cond, processes, current)
                 break
             case 'X':
-                var cond = (this.memory[acheck].a === this.memory[bcheck].b) && (this.memory[acheck].b === this.memory[bcheck].a)
-                this._compare(cond, processes, process_index)
+                var cond = (memory[acheck].a === memory[bcheck].b) && (memory[acheck].b === memory[bcheck].a)
+                this._compare(cond, processes, current)
                 break
             default:
                 break
         }
-
+        current += 1
+        return [memory, processes, current]
     }
 }
 
 //slt
 class Slt extends Command {
-    _compare(cond, processes, process_index) {
-        if (cond){
-            processes[process_index] = (processes[process_index] + 2) % this.memory_size
-        }
-        else {
-            processes[process_index] = (processes[process_index] + 1) % this.memory_size
-        }
+    _compare(cond, processes, current) {
+        if (cond)
+            processes[current] = (processes[current] + 2) % this.memory_size
+        else
+            processes[current] = (processes[current] + 1) % this.memory_size
     }
 
-    _call(processes, process_index, gen, p){
-        var acheck = this.get_true_index(this.a, this.a_am)
-        var bcheck = this.get_true_index(this.b, this.b_am)
+    _call(memory, processes, current, p){
+        var acheck = this.get_true_index(this.a, this.a_am, memory)
+        var bcheck = this.get_true_index(this.b, this.b_am, memory)
         switch(this.mod){
             case 'A':
-                this._compare(this.memory[acheck].a < this.memory[bcheck].a, processes, process_index)
+                this._compare(memory[acheck].a < memory[bcheck].a, processes, current)
                 break
             case 'B':
-                this._compare(this.memory[acheck].b < this.memory[bcheck].b, processes, process_index)
+                this._compare(memory[acheck].b < memory[bcheck].b, processes, current)
                 break
             case 'AB':
-                this._compare(this.memory[acheck].a < this.memory[bcheck].b, processes, process_index)
+                this._compare(memory[acheck].a < memory[bcheck].b, processes, current)
                 break
             case 'BA':
-                this._compare(this.memory[acheck].b < this.memory[bcheck].a, processes, process_index)
+                this._compare(memory[acheck].b < memory[bcheck].a, processes, current)
                 break
             case 'I': case 'F':
-                var cond = (this.memory[acheck].a < this.memory[bcheck].a) && (this.memory[acheck].b < this.memory[bcheck].b)
-                this._compare(cond, processes, process_index)
+                var cond = (memory[acheck].a < memory[bcheck].a) && (memory[acheck].b < memory[bcheck].b)
+                this._compare(cond, processes, current)
                 break
             case 'X':
-                var cond = (this.memory[acheck].a < this.memory[bcheck].b) && (this.memory[acheck].b < this.memory[bcheck].a)
-                this._compare(cond, processes, process_index)
+                var cond = (memory[acheck].a < memory[bcheck].b) && (memory[acheck].b < memory[bcheck].a)
+                this._compare(cond, processes, current)
                 break
             default:
                 break
         }
+        current += 1
+        return [memory, processes, current]
     }
 }
 
@@ -552,59 +565,59 @@ class Sne extends Command {
         return false
     }
 
-    _compare(cond, processes, process_index) {
-        if (cond){
-            processes[process_index] = (processes[process_index] + 2) % this.memory_size
-        }
-        else {
-            processes[process_index] = (processes[process_index] + 1) % this.memory_size
-        }
+    _compare(cond, processes, current) {
+        if (cond)
+            processes[current] = (processes[current] + 2) % this.memory_size
+        else
+            processes[current] = (processes[current] + 1) % this.memory_size
     }
 
-    _call(processes, process_index, gen, p){
-        var acheck = this.get_true_index(this.a, this.a_am)
-        var bcheck = this.get_true_index(this.b, this.b_am)
+    _call(memory, processes, current, p){
+        var acheck = this.get_true_index(this.a, this.a_am, memory)
+        var bcheck = this.get_true_index(this.b, this.b_am, memory)
         switch(this.mod){
             case 'A':
-                this._compare(this.memory[acheck].a !== this.memory[bcheck].a, processes, process_index)
+                this._compare(memory[acheck].a !== memory[bcheck].a, processes, current)
                 break
             case 'B':
-                this._compare(this.memory[acheck].b !== this.memory[bcheck].b, processes, process_index)
+                this._compare(memory[acheck].b !== memory[bcheck].b, processes, current)
                 break
             case 'AB':
-                this._compare(this.memory[acheck].a !== this.memory[bcheck].b, processes, process_index)
+                this._compare(memory[acheck].a !== memory[bcheck].b, processes, current)
                 break
             case 'BA':
-                this._compare(this.memory[acheck].b !== this.memory[bcheck].b, processes, process_index)
+                this._compare(memory[acheck].b !== memory[bcheck].b, processes, current)
                 break
             case 'F':
-                var cond = (this.memory[acheck].a !== this.memory[bcheck].a) || (this.memory[acheck].b !== this.memory[bcheck].b)
-                this._compare(cond, processes, process_index)
+                var cond = (memory[acheck].a !== memory[bcheck].a) || (memory[acheck].b !== memory[bcheck].b)
+                this._compare(cond, processes, current)
                 break
             case 'I':
-                var cond = this._compare_commands(this.memory[acheck], this.memory[bcheck])
-                this._compare(cond, processes, process_index)
+                var cond = this._compare_commands(memory[acheck], memory[bcheck])
+                this._compare(cond, processes, current)
                 break
             case 'X':
-                var cond = (this.memory[acheck].a !== this.memory[bcheck].b) || (this.memory[acheck].b !== this.memory[bcheck].a)
-                this._compare(cond, processes, process_index)
+                var cond = (memory[acheck].a !== memory[bcheck].b) || (memory[acheck].b !== memory[bcheck].a)
+                this._compare(cond, processes, current)
                 break
             default:
                 break
         }
-
+        current += 1
+        return [memory, processes, current]
     }
 }
 
 //spl
 class Spl extends Command {
-    _call(processes, process_index, gen, p){
-        // new branch
-        var destination_index = this.get_true_index(this.a, this.a_am)
-        processes.splice(process_index+1,0, destination_index)
-        processes[process_index] = (processes[process_index] + 1) % this.memory_size
-        // continue on old shit
-        gen.next()
+    _call(memory, processes, current, p){
+        var destination_index = this.get_true_index(this.a, this.a_am, memory)
+
+        processes.splice(current + 1, 0, destination_index)
+
+        processes[current] = (processes[current] + 1) % this.memory_size
+        current += 2
+        return [memory, processes, current]
     }
 }
 
@@ -617,36 +630,38 @@ class Sub extends Command {
         return ret
     }
 
-    _call(processes, process_index, gen, p){
-        var source = this.get_true_index(this.a, this.a_am)
-        var dest = this.get_true_index(this.b, this.b_am)
+    _call(memory, processes, current, p){
+        var source = this.get_true_index(this.a, this.a_am, memory)
+        var dest = this.get_true_index(this.b, this.b_am, memory)
         switch(this.mod){
             case "A":
-                this.memory[dest].a = this._sub(this.memory[source].a, this.memory[dest].a)
+                memory[dest].a = this._sub(memory[source].a, memory[dest].a)
                 break
             case "B":
-                this.memory[dest].b = this._sub(this.memory[source].b, this.memory[dest].b)
+                memory[dest].b = this._sub(memory[source].b, memory[dest].b)
                 break
             case "AB":
-                this.memory[dest].b = this._sub(this.memory[source].a, this.memory[dest].b)
+                memory[dest].b = this._sub(memory[source].a, memory[dest].b)
                 break
             case "BA":
-                this.memory[dest].a = this._sub(this.memory[source].b, this.memory[dest].a)
+                memory[dest].a = this._sub(memory[source].b, memory[dest].a)
                 break
             case "F": case "I":
-                this.memory[dest].a = this._sub(this.memory[source].a, this.memory[dest].a)
-                this.memory[dest].b = this._sub(this.memory[source].b, this.memory[dest].b)
+                memory[dest].a = this._sub(memory[source].a, memory[dest].a)
+                memory[dest].b = this._sub(memory[source].b, memory[dest].b)
                 break
             case "X":
-                let [s_a, s_b] = [this.memory[source].a, this.memory[source].b]
-                let [d_a, d_b] = [this.memory[dest].a, this.memory[dest].b]
-                this.memory[dest].a = this._sub(s_b, d_a)
-                this.memory[dest].b = this._sub(s_a, d_b)
+                let [s_a, s_b] = [memory[source].a, memory[source].b]
+                let [d_a, d_b] = [memory[dest].a, memory[dest].b]
+                memory[dest].a = this._sub(s_b, d_a)
+                memory[dest].b = this._sub(s_a, d_b)
                 break
             default:
                 break
         }
-        processes[process_index] = (processes[process_index] + 1) % this.memory_size
+        processes[current] = (processes[current] + 1) % this.memory_size
+        current += 1
+        return [memory, processes, current]
     }
 }
 

@@ -2,25 +2,28 @@
 
 import React, {Component} from "react"
 import { Link } from 'react-router-dom'
-import Canvas from  './corewars/canvas.component'
+import Cell from  './corewars/canvas.component'
 import { Command, Add, Dat, Div, Djn, Jmn,
     Jmp, Jmz, Mod, Mov, Mul, Seq,
     Slt, Sne, Spl, Sub } from  './corewars/instructions'
 
 
-export default class Play extends Component {
-    constructor() {
-        super();
-        var game_length = 1
-        var final_length = 0
+const HEIGHT = 600
+const WIDTH = 800
+const INTERVAL = 0
 
+export default class Play extends Component {
+    constructor(props) {
+        super();
         var memory_size = 625
         var memory = this.init(memory_size)
-        var player1_code = [new Mov(0, 1, "$", "$", "I", memory, memory_size, 0)] // array of commands
-        var player2_code = [new Add(4, 3, '#','$', 'AB', memory, memory_size, 17),
-            new Mov(2, 2, "$", "@", "I", memory, memory_size, 18),
-            new Jmp(-2, 0,'$', '$', '', memory, memory_size, 19 ),
-            new Dat(0, 0, '$', '$', '', memory, memory_size, 20)]
+        var player1_code = [new Mov(0, 1, "$", "$", "I", memory_size)] // array of commands
+        // var player2_code = [new Add(4, 3, '#','$', 'AB', memory_size),
+        //     new Mov(2, 2, "$", "@", "I", memory_size),
+        //     new Jmp(-2, 0,'$', '$', '', memory_size),
+        //     new Dat(0, 0, '$', '$', '', memory_size)]
+        var player2_code = props.p2code
+
         var code = [player1_code, player2_code]
         var players = this.make_players(memory, code)
 
@@ -28,28 +31,19 @@ export default class Play extends Component {
             memory_size: memory_size,
             memory: memory,
             players: players,
-            game_length: game_length,
+            game_length: 1000,
+            final_length: 0,
             done: null,
-            final_length: final_length,
-            i: -1,
-            p: -1,
+            current_step: 1,
+            current_player: 0,
             in_game: false
         }
-    }
-
-    * gen(processes) {
-        while (processes.length > 0) {
-            for (let [index, value] of processes.entries()) {
-                yield [processes, index]
-            }
-        }
-        yield null
     }
 
     init(memory_size) {
         var memory = []
         for (let i = 0; i < memory_size; i++) {
-            memory.push(new Dat(0, 0, "$", "$", "", memory, memory_size))
+            memory.push(new Dat(0, 0, "$", "$", "", memory_size))
             memory[memory.length - 1].init(i, -1)
         }
         return memory
@@ -57,7 +51,7 @@ export default class Play extends Component {
 
     check_memory(memory, start, code_len) {
         for (var i = 0; i < code_len; i++) {
-            if (memory[(start + i) % memory.length].player_id != -1)
+            if (memory[(start + i) % memory.length].player_id !== -1)
                 return false
         }
         return true
@@ -83,47 +77,62 @@ export default class Play extends Component {
         for (var i = 0; i < code.length; i++) {
             let start = this.set_code(memory, code[i], i)
             // Start new process where code was written
-            players.push(this.gen([start]))
+            let player = {
+                "processes": [start],
+                "current": 0
+            }
+            players.push(player)
         }
         return players
     }
 
-    step(i, p) {
-        let {game_length, memory, code, c, ctx, players} = this.state
-        let ret = players[p].next().value
-        if (ret) {
-            let [current_list, index] = ret
-            let address = current_list[index]
-            memory[address].call(current_list, index, players[p], p)
+    step(current_player, players) {
+        const {memory} = this.state
+        const {processes, current} = players[current_player]
+        const address = processes[current]
 
-            if (--i)
-                this.update()
-            else
-                this.end(-1, game_length)
-        } else {
-            let winner = (p + 1 == players.length ? 0 : p + 1)
-            let final_length = this.state.final_length + game_length - i + 1
-            this.end(winner, final_length)
+        let copy_memory = memory.map(x =>
+            (Object.assign( Object.create( Object.getPrototypeOf(x)), x)))
+        let copy_processes = [...processes]
+        var copy_current = current
+        let [new_memory, new_processes, new_current] = memory[address].call(copy_memory,
+            copy_processes, copy_current, current_player)
+        new_current = new_current % new_processes.length
+
+        const new_player = {
+            "processes": new_processes,
+            "current": new_current
         }
+        let new_players = players.map(x => ({...x}))
+        new_players[current_player] = new_player
+
+        return [new_memory, new_players]
     }
 
-    update() {
-        let {game_length, players, i, p} = this.state
-        if (i == -1) {
-            this.setState({ done: null })
-            i = game_length
+    forward(recur=true) {
+        const {current_step, current_player, players, game_length, in_game} = this.state
+        const next_player = (current_player === 0 ? 1 : 0)
+
+        if (current_step === game_length)
+            this.end(-1, game_length)
+        else if (players[current_player]["processes"].length === 0)
+            this.end(next_player, current_step)
+        else if (in_game) {
+            const [new_memory, new_players] = this.step(current_player, players)
+            this.setState({
+                current_step: current_step + 1,
+                current_player: next_player,
+                players: new_players,
+                memory: new_memory,
+            })
+            if (recur)
+                setTimeout(() => {this.forward()}, INTERVAL)
         }
-        if (p == -1 || p == players.length - 1)
-            p = 0
-        else
-            p += 1
-        this.setState({i: i, p: p})
-        setTimeout(() => {requestAnimationFrame(() => {this.step(i, p)})}, 100)
     }
 
     start() {
         if (!this.state.in_game)
-            this.setState({in_game: true}, () => {this.update()})
+            this.setState({in_game: true}, () => {this.forward()})
     }
 
     end(winner, final_length) {
@@ -135,15 +144,21 @@ export default class Play extends Component {
 
     render(){
         return(
-            <div>
-                <div class="container">
-                    <div class = "row text-center">
-                        <button onClick={this.start.bind(this)}>Run Game</button>
-                        <p id="demo">{this.state.done}</p>
-                    </div>
+            <div class="container row text-center">
+                <div className="Board" style={{height: HEIGHT, width: WIDTH}}>
+                    {this.state.memory.map(cell => (
+                        <Cell
+                            height = {HEIGHT}
+                            width = {WIDTH}
+                            player_id = {cell.player_id}
+                            index = {cell.index}
+                            key = {cell.index}
+                        />
+                    ))}
                 </div>
-                <div>
-                    <Canvas memory={this.state.memory}/>
+                <div class = "row text-center">
+                    <button class="btn btn-dark" onClick={this.start.bind(this)}>Run Game</button>
+                    <p id="demo">{this.state.done}</p>
                 </div>
             </div>
         )

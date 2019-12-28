@@ -17,13 +17,13 @@ router.get('/', (req, res, next)=>{
         .catch(err => res.status(400).json('Error: ' + err))
 });
 
-router.get('/add/', (req, res, next)=>{
+router.get('/new/', (req, res, next)=>{
     Warrior.find()
         .then(warriors => res.json(warriors))
         .catch(err => res.status(400).json('Error: ' + err))
 });
 
-router.post('/add/', (req, res, next)=>{
+router.post('/new/', (req, res, next)=>{
     const commandList = req.body.commandList;
     const name = req.body.name;
     const date = Date.parse(req.body.date)
@@ -33,7 +33,7 @@ router.post('/add/', (req, res, next)=>{
         .catch(err=>res.status(400).json('Error'+err))
 })
 
-// play route to edit warriors (todo later)
+// play routing to edit warriors (todo later)
 // router.post('')
 
 

@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import indexComponent from "./components/index.component"
 import WarriorsComponent from "./components/warriors.component"
 import NewWarriorComponent from './components/newwarrior.component'
-import EditWarriorComponent from './components/editwarrior.component'
+// import EditWarriorComponent from './components/editwarrior.component'
 
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
           {/* Routing Setup*/}
           <Route path="/" exact component={indexComponent} />
           <Route path="/play" component={WarriorsComponent} />
-            {/*<Route path="/play/new" component={NewWarriorComponent} />>*/}
+          <Route path="/play/new" component={NewWarriorComponent} />
             {/*<Route path="/play/edit" component={playEditComponent} />*/}
         </div>
       </Router>

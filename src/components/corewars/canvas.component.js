@@ -1,72 +1,79 @@
-//React play page
+import React, {PureComponent} from "react"
+// import { Link } from 'react-router-dom'
+// import { Command, Add, Dat, Div, Djn, Jmn,
+//     Jmp, Jmz, Mod, Mov, Mul, Seq,
+//     Slt, Sne, Spl, Sub } from  './instructions'
+import "./canvas.component.css"
 
-import React, {Component} from "react"
-import { Link } from 'react-router-dom'
-import { Command, Add, Dat, Div, Djn, Jmn,
-    Jmp, Jmz, Mod, Mov, Mul, Seq,
-    Slt, Sne, Spl, Sub } from  './instructions'
+
+const WIDTH = 800
+const HEIGHT = 600
+const ROWS = 25
+const COLUMNS = 25
+const CELL_SIZE = (WIDTH / COLUMNS > HEIGHT / ROWS ?
+    Math.floor(HEIGHT / ROWS) : Math.floor(WIDTH / COLUMNS))
+const X_OFFSET = Math.floor((WIDTH - CELL_SIZE * COLUMNS) / 2)
+const Y_OFFSET = Math.floor((HEIGHT - CELL_SIZE * ROWS) / 2)
 
 
-export default class Canvas extends Component {
-    constructor(props) {
-        super(props)
-        this.canvasRef = React.createRef();
-        var d1 = 5
-        var d2 = 10
-        var w = 1015
-        var h = 815
-        var wn = 25
-        var hn = 25
-        var sl = 5
-        this.constants = {
-            d1: d1,
-            d2: d2,
-            w: w,
-            h: h,
-            wn: wn,
-            hn: hn,
-            sl: sl,
+
+// todo Test if this is faster
+// const Cell2 = () => {
+//     console.log("Rendered")
+//     const { index, player_id } = this.props
+//     const x = Math.floor(index / ROWS)
+//     const y = index % ROWS
+//     let bg_color
+//     switch(player_id) {
+//         case 0:
+//             bg_color = "red"
+//             break
+//         case 1:
+//             bg_color = "blue"
+//             break
+//         default:
+//             bg_color = "#eeeeee"
+//             break
+//
+//     return(
+//         <div className="Cell" style={{
+//             left: `${CELL_SIZE * x + X_OFFSET}px`,
+//             top: `${CELL_SIZE * y + Y_OFFSET}px`,
+//             width: `${CELL_SIZE}px`,
+//             height: `${CELL_SIZE}px`,
+//             backgroundColor: `${bg_color}`
+//         }}
+//         />
+//     )
+// }
+
+export default class Cell extends PureComponent {
+    render() {
+        console.log("Rendered")
+        const { index, player_id } = this.props
+        const x = Math.floor(index / ROWS)
+        const y = index % ROWS
+        let bg_color
+        switch(player_id) {
+            case 0:
+                bg_color = "red"
+                break
+            case 1:
+                bg_color = "blue"
+                break
+            default:
+                bg_color = "#eeeeee"
+                break
         }
-    }
-
-    updateCanvas(c, ctx){
-        var count = 0
-        let memory = this.props.memory
-        let {wn, hn, d1, d2, sl} = this.constants
-
-        ctx.clearRect(0, 0, c.width,c.height);
-
-        for (var w_inc=0; w_inc<wn; w_inc++){
-            for (var h_inc=0; h_inc<hn; h_inc++){
-                ctx.beginPath();
-                ctx.strokeStyle = "gray";
-                if(memory[count].player_id == 0)
-                    ctx.strokeStyle = "red";
-                else if(memory[count].player_id == 1)
-                    ctx.strokeStyle = "blue";
-                ctx.beginPath();
-                ctx.rect(d2+w_inc*(sl+d1), d2+h_inc*(sl+d1), sl, sl);
-                ctx.stroke();
-                count++
-            }
-        }
-    }
-
-    componentDidMount() {
-        const canvas = this.canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        this.updateCanvas(canvas, ctx)
-    }
-
-    componentDidUpdate() {
-        const canvas = this.canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        this.updateCanvas(canvas, ctx)
-    }
-
-    render(){
-        return(
-            <canvas ref={this.canvasRef} id="myCanvas" width="1015" height="815"></canvas>
+        return (
+            <div className="Cell" style={{
+                left: `${CELL_SIZE * x + X_OFFSET}px`,
+                top: `${CELL_SIZE * y + Y_OFFSET}px`,
+                width: `${CELL_SIZE}px`,
+                height: `${CELL_SIZE}px`,
+                backgroundColor: `${bg_color}`
+            }}
+            />
         )
     }
 }

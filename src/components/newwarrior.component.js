@@ -31,7 +31,6 @@ const maxCommands = 15
 const renderCommand = (cmdToRender) => {
     return(
         <a className="dropdown-item" href="#">{cmdToRender}</a>
-        // todo fix dropdown usage
     )
 }
 const displayAvailableCommands = (max)=>{
@@ -225,7 +224,6 @@ export default class NewWarriorComponent extends Component {
             this.state.a_am,
             this.state.b_am,
             this.state.mod,
-            memory,
             // todo fix memory above, as it isn't defined: aka how we access it form this component, and how we interact with it
             memory_size,
         )
@@ -278,7 +276,7 @@ export default class NewWarriorComponent extends Component {
                     </div>
                     <div className='col-md-6'>
                         <h3>View your Warrior in Action here</h3>
-                        <PlayComponent />
+                        <PlayComponent p2code={this.state.commandList}/>
                         // todo this isn't the correct implementation of the play component; we need to have the warriors from our state factor into that play component hmmmmmm
                     </div>
                 </div>
