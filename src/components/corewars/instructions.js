@@ -86,6 +86,9 @@ class Command {
     }
 
     _call(processes, process_index, gen, p){}
+
+    values(){return({a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
+
 }
 
 

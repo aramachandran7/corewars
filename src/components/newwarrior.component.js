@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Command, Add, Dat, Div, Djn, Jmn,
     Jmp, Jmz, Mod, Mov, Mul, Seq,
     Slt, Sne, Spl, Sub } from "./corewars/instructions";
+import PlayComponent from './play.component'
 
 // string to command dictionary
 const cmdkey = {
@@ -30,14 +31,34 @@ const maxCommands = 15
 const renderCommand = (cmdToRender) => {
     return(
         <a className="dropdown-item" href="#">{cmdToRender}</a>
+        // todo fix dropdown usage
     )
 }
-const displayCommands = (max)=>{
+const displayAvailableCommands = (max)=>{
     var listCommands = []
     for (var i = 0; i <max; i++) {
         listCommands.push(renderCommand(Object.keys(cmdkey)[i]))
     }
     return({listCommands})
+}
+
+const renderInstruction = (commandObject) => {
+    console.log(commandObject.values)
+    return(
+        <div className="card">
+            <div className="card-body">
+                <h4 className="card-title">{typeof(commandObject)}</h4>
+                <p className="card-text">a_am: {commandObject.values.a_am} | a: {commandObject.values.a} | b_am: {commandObject.values.b_am} | b: {commandObject.values.b} | mod: {commandObject.values.mod} |</p>
+            </div>
+        </div>
+    )
+
+}
+const displayChosenInstructions = () => {
+    var instructionList = []
+    for (var inc = 0; inc < this.commandList.length; inc ++) {
+        instructionList.push(renderInstruction(this.commandList[inc]))
+    }
 }
 
 const CmdInput = () => {
@@ -56,7 +77,7 @@ const CmdInput = () => {
                                     Command
                                 </button>
                                 <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    {displayCommands(maxCommands)}
+                                    {displayAvailableCommands(maxCommands)}
                                 </div>
                             </div>
                         </div>
@@ -76,9 +97,10 @@ const CmdInput = () => {
                             <label> b: </label>
                             <input type="text" required className="form-control" value={this.state.b} onChange={this.onChangeb} />
                         </div>
-
-
-
+                        <div className="form-group">
+                            <label> MOD: </label>
+                            <input type="text" required className="form-control" value={this.state.MOD} onChange={this.onChangeMOD} />
+                        </div>
                         <button type="submit" className="btn btn-default">Submit</button>
                     </form>
                 </div>
@@ -92,10 +114,22 @@ export default class NewWarriorComponent extends Component {
     constructor(props){
         super(props)
 
-        this.onChangeName = this.onChangeName.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
         this.onSave = this.onSave.bind(this)
         this.onRun = this.onRun.bind(this)
+
+        this.onChangeName = this.onChangeName.bind(this)
+        this.onChangea = this.onChangea.bind(this)
+        this.onChangeb = this.onChangeb.bind(this)
+        this.onChangea_am = this.onChangea_am.bind(this)
+        this.onChangeb_am = this.onChangeb_am.bind(this)
+        this.onChangeMOD = this.onChangeMOD.bind(this)
+        this.onChangeCmd = this.onChangeCmd.bind(this)
+
+
+
+
+        // add more this binds
 
         this.state = {
             name: '',
@@ -180,6 +214,9 @@ export default class NewWarriorComponent extends Component {
         window.location = '/'
     }
 
+    //dummy code
+    onSubmitName(e){}
+
     onSubmit(e){
         var newCommandList = this.state.commandList
         const newCmd = new cmdkey[this.state.cmd](
@@ -189,6 +226,7 @@ export default class NewWarriorComponent extends Component {
             this.state.b_am,
             this.state.mod,
             memory,
+            // todo fix memory above, as it isn't defined: aka how we access it form this component, and how we interact with it
             memory_size,
         )
         newCommandList.push(newCmd)
@@ -210,12 +248,40 @@ export default class NewWarriorComponent extends Component {
         //
     }
 
-
-
     render(){
         return(
-            <div>
-                hello world
+            <div className='container'>
+                <div className='row'>
+                    <div className='col-12'>
+                        <h1>Create A New Warrior</h1>
+                    </div>
+                </div>
+                <div className='row'>
+                    <div className='col-md-6'>
+                        <form className="form-inline" onSubmit={this.onSubmitName}>
+                            <div className="form-group">
+                                <label> Name Your Warrior </label>
+                                <input type="text" required className="form-control" value={this.state.name} onChange={this.onChangeName} />
+                            </div>
+                            <button type="submit" className="btn btn-default">Save Name</button>
+                        </form>
+                        <br />
+                        {/*not sure if you can put a card inside a card ...*/}
+                        <div className="card">
+                            <div className="card-body">
+                                <h4 className="card-title">Your Warrior </h4>
+                                {displayChosenInstructions()}
+                            </div>
+                        </div>
+                        <br />
+                        <CmdInput/>
+                    </div>
+                    <div className='col-md-6'>
+                        <h3>View your Warrior in Action here</h3>
+                        <PlayComponent />
+                        // todo this isn't the correct implementation of the play component; we need to have the warriors from our state factor into that play component hmmmmmm
+                    </div>
+                </div>
             </div>
         )
     }
