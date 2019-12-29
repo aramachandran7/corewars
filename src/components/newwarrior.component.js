@@ -128,6 +128,7 @@ export default class NewWarriorComponent extends Component {
 
 
 
+
         // add more this binds
 
         this.state = {
@@ -142,6 +143,7 @@ export default class NewWarriorComponent extends Component {
             a_am:'',
             b_am:'',
             mod:'',
+            runBool: false,
         }
     }
 
@@ -198,7 +200,9 @@ export default class NewWarriorComponent extends Component {
 
 
     onRun(e){
-        // runs in play :)
+        this.setState({
+            runBool: !this.state.runBool,
+        })
     }
     onSave(e){
         e.preventDefault()
@@ -276,8 +280,11 @@ export default class NewWarriorComponent extends Component {
                     </div>
                     <div className='col-md-6'>
                         <h3>View your Warrior in Action here</h3>
-                        <PlayComponent p2code={this.state.commandList}/>
-                        // todo this isn't the correct implementation of the play component; we need to have the warriors from our state factor into that play component hmmmmmm
+                        <PlayComponent p2code={this.state.commandList} runBoo={this.state.runBool}/>
+                        {/*// todo this isn't the correct implementation of the play component; we need to have the warriors from our state factor into that play component hmmmmmm*/}
+                        <button type="button" onClick={this.onRun} className="btn btn-success">Test/Stop Test</button>
+                        <button type="button" onClick={this.onSave} className="btn btn-success">Save Your Warrior!</button>
+
                     </div>
                 </div>
             </div>

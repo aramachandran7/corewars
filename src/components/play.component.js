@@ -36,7 +36,8 @@ export default class Play extends Component {
             done: null,
             current_step: 1,
             current_player: 0,
-            in_game: false
+            in_game: false,
+            runBool: props.runBool
         }
     }
 
@@ -91,11 +92,13 @@ export default class Play extends Component {
         const {processes, current} = players[current_player]
         const address = processes[current]
 
-        let copy_memory = memory.map(x =>
-            (Object.assign( Object.create( Object.getPrototypeOf(x)), x)))
+        // let copy_memory = memory.map(x =>
+        //     (Object.assign( Object.create( Object.getPrototypeOf(x)), x)))
+
+
         let copy_processes = [...processes]
         var copy_current = current
-        let [new_memory, new_processes, new_current] = memory[address].call(copy_memory,
+        let [new_memory, new_processes, new_current] = memory[address].call(memory,
             copy_processes, copy_current, current_player)
         new_current = new_current % new_processes.length
 
