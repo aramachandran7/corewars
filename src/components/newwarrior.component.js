@@ -25,22 +25,26 @@ const cmdkey = {
     // 'Command': Command
 }
 
+
+
+// const maxCommands = 15
+// prob not needed
+// const renderCommand = (cmdToRender) => {
+//     return(
+//         <a className="dropdown-item" href="#">{cmdToRender}</a>
+//     )
+// }
+// const displayAvailableCommands = (max)=>{
+//     var listCommands = []
+//     for (var i = 0; i <max; i++) {
+//         listCommands.push(renderCommand(cmdkey[i]))
+//     }
+//
+//     return({listCommands})
+// }
 const memory_size = 625;
-const maxCommands = 15
 
-const renderCommand = (cmdToRender) => {
-    return(
-        <a className="dropdown-item" href="#">{cmdToRender}</a>
-    )
-}
-const displayAvailableCommands = (max)=>{
-    var listCommands = []
-    for (var i = 0; i <max; i++) {
-        listCommands.push(renderCommand(cmdkey[i]))
-    }
 
-    return({listCommands})
-}
 
 
 
@@ -183,19 +187,25 @@ export default class NewWarriorComponent extends Component {
 
     onSubmit(e){
         var newCommandList = this.state.commandList
-        const newCmd = new cmdkey[this.state.cmd](
-            this.state.a,
-            this.state.b,
-            this.state.a_am,
-            this.state.b_am,
-            this.state.mod,
-            // todo fix memory above, as it isn't defined: aka how we access it form this component, and how we interact with it
-            memory_size,
-        )
-        newCommandList.push(newCmd)
-        // grab current state for commmandlist, push, set new state
-        // will be used in individual submits of warrior
-        //
+
+        switch (this.state.cmd){
+            case 'Mov': newCommandList.push(Mov(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Add': newCommandList.push(Add(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Dat': newCommandList.push(Dat(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Div': newCommandList.push(Div(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Djn': newCommandList.push(Djn(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Jmn': newCommandList.push(Jmn(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Jmp': newCommandList.push(Jmp(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Jmz': newCommandList.push(Jmz(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Slt': newCommandList.push(Slt(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Sne': newCommandList.push(Sne(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Spl': newCommandList.push(Spl(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Sub': newCommandList.push(Sub(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Mod': newCommandList.push(Mod(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Mul': newCommandList.push(Mul(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Seq': newCommandList.push(Seq(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+        }
+
         this.setState({
             commandList: newCommandList,
             cmd:'',
@@ -244,29 +254,15 @@ export default class NewWarriorComponent extends Component {
                                 <form onSubmit={this.onSubmit}>
                                     <div className='form-inline'>
                                         <div className='form-group'>
-                                            <div className="dropdown">
-                                                <button className="btn btn-secondary dropdown-toggle ml-2 mb-2 mr-sm-2" type="button" id="dropdownMenuButton"
-                                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                                        value={this.state.cmd} onChange={this.onChangeCmd}>
-                                                    Command
-                                                </button>
-                                                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    {/*{displayAvailableCommands(maxCommands)}*/}
-                                                    <a className="dropdown-item" href="#">Dat</a>
-                                                    <a className="dropdown-item" href="#">Mov</a>
-                                                    <a className="dropdown-item" href="#">Slt</a>
-                                                    <a className="dropdown-item" href="#">Jmp</a>
-                                                </div>
-                                            </div>
+                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='Instruction (Mov)' value={this.state.cmd} onChange={this.onChangeCmd} />
                                         </div>
                                         <div className="form-group">
-                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='Modifier' value={this.state.MOD} onChange={this.onChangeMOD} />
+                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='Modifier (I)' value={this.state.MOD} onChange={this.onChangeMOD} />
                                         </div>
-                                        <button type="submit" className="btn btn-success ml-2 mb-2 mr-sm-2">Submit</button>
                                     </div>
                                     <div className='form-inline'>
                                         <div className="form-group">
-                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='A_AM (#)' value={this.state.a_am} onChange={this.onChangea_am} />
+                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='A_AM ($)' value={this.state.a_am} onChange={this.onChangea_am} />
                                         </div>
                                         <div className="form-group">
                                             <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='A (0)' value={this.state.a} onChange={this.onChangea} />
@@ -274,17 +270,19 @@ export default class NewWarriorComponent extends Component {
                                     </div>
                                     <div className='form-inline'>
                                         <div className="form-group">
-                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='B_AM (#)' value={this.state.b_am} onChange={this.onChangeb_am} />
+                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='B_AM ($)' value={this.state.b_am} onChange={this.onChangeb_am} />
                                         </div>
                                         <div className="form-group">
-                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='B (0)' value={this.state.b} onChange={this.onChangeb} />
+                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='B (1)' value={this.state.b} onChange={this.onChangeb} />
                                         </div>
                                     </div>
+                                    <button type="submit" className="btn btn-success ml-2 mb-2 mr-sm-2">Submit</button>
+
                                 </form>
                             </div>
                         </div>
                         <br />
-                        <button type="button" onClick={this.onSave} className="btn btn-success">Save Your Warrior!</button>
+                        <button type="button" onClick={this.onSave} className="btn btn-success">When Finished, Save Your Warrior!</button>
                     </div>
                     <div className='col-md-6'>
                         <h3>Test Your Warrior Here</h3>
