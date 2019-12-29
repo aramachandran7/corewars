@@ -17,8 +17,8 @@ function App() {
         <div className='container' >
           {/*<Navbar />*/}
           {/* Routing Setup*/}
-          <Route path="/" exact component={indexComponent} />
-          <Route path="/play" component={WarriorsComponent} />
+          <Route exact path="/" component={indexComponent} />
+          <Route exact path="/play" component={WarriorsComponent} />
           <Route path="/play/new" component={NewWarriorComponent} />
             {/*<Route path="/play/edit" component={playEditComponent} />*/}
         </div>

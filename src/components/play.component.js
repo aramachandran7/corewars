@@ -37,7 +37,6 @@ export default class Play extends Component {
             current_step: 1,
             current_player: 0,
             in_game: false,
-            runBool: props.runBool
         }
     }
 
@@ -92,13 +91,13 @@ export default class Play extends Component {
         const {processes, current} = players[current_player]
         const address = processes[current]
 
-        // let copy_memory = memory.map(x =>
-        //     (Object.assign( Object.create( Object.getPrototypeOf(x)), x)))
+        let copy_memory = memory.map(x =>
+            (Object.assign( Object.create( Object.getPrototypeOf(x)), x)))
 
 
         let copy_processes = [...processes]
         var copy_current = current
-        let [new_memory, new_processes, new_current] = memory[address].call(memory,
+        let [new_memory, new_processes, new_current] = memory[address].call(copy_memory,
             copy_processes, copy_current, current_player)
         new_current = new_current % new_processes.length
 
@@ -134,8 +133,8 @@ export default class Play extends Component {
     }
 
     start() {
-        if (!this.state.in_game)
-            this.setState({in_game: true}, () => {this.forward()})
+        if (!this.state.in_game) {
+            this.setState({in_game: true}, () => {this.forward()})}
     }
 
     end(winner, final_length) {
@@ -147,22 +146,26 @@ export default class Play extends Component {
 
     render(){
         return(
-            <div class="container row text-center">
-                <div className="Board" style={{height: HEIGHT, width: WIDTH}}>
-                    {this.state.memory.map(cell => (
-                        <Cell
-                            height = {HEIGHT}
-                            width = {WIDTH}
-                            player_id = {cell.player_id}
-                            index = {cell.index}
-                            key = {cell.index}
-                        />
-                    ))}
+            <div className="container">
+                <div className='row'>
+                    <button className="btn btn-secondary mt-2 mr-sm-2" onClick={this.start.bind(this)}>Test Warrior</button>
+                    {/*<p id="demo">{this.state.done}</p>*/}
                 </div>
-                <div class = "row text-center">
-                    <button class="btn btn-dark" onClick={this.start.bind(this)}>Run Game</button>
-                    <p id="demo">{this.state.done}</p>
+                <br />
+                <div className='row ml-0' >
+                    <div className="Board" style={{height: HEIGHT, width: WIDTH}}>
+                        {this.state.memory.map(cell => (
+                            <Cell
+                                height = {HEIGHT}
+                                width = {WIDTH}
+                                player_id = {cell.player_id}
+                                index = {cell.index}
+                                key = {cell.index}
+                            />
+                        ))}
+                    </div>
                 </div>
+
             </div>
         )
     }

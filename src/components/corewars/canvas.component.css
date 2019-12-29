@@ -1,6 +1,5 @@
 .Board {
     position: relative;
-    margin: 30px auto;
 }
 
 .Cell {
@@ -10,3 +9,6 @@
     border: 5px solid white
 }
 
+.ml-0 {
+    margin-left: 0 !important;
+}

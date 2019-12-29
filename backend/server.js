@@ -14,7 +14,7 @@ app.use('/play/', playRouter)
 
 // MGDB setup
 // mongodb+srv://aramachandran:Belur108@usertesting-cdidq.mongodb.net/test?retryWrites=true&w=majority
-const db = '';
+const db = 'mongodb+srv://aramachandran:Belur108@warriorscluster-bwcic.mongodb.net/test?retryWrites=true&w=majority\n';
 mongoose.connect(db,{ useNewUrlParser: true })
     .then(() => console.log("MongoDB successfully connected"))
     .catch(err => console.log(err));

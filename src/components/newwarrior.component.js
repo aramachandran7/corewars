@@ -36,10 +36,13 @@ const renderCommand = (cmdToRender) => {
 const displayAvailableCommands = (max)=>{
     var listCommands = []
     for (var i = 0; i <max; i++) {
-        listCommands.push(renderCommand(Object.keys(cmdkey)[i]))
+        listCommands.push(renderCommand(cmdkey[i]))
     }
+
     return({listCommands})
 }
+
+
 
 const renderInstruction = (commandObject) => {
     console.log(commandObject.values)
@@ -53,60 +56,18 @@ const renderInstruction = (commandObject) => {
     )
 
 }
-const displayChosenInstructions = () => {
+const displayChosenInstructions = (commandList) => {
     var instructionList = []
-    for (var inc = 0; inc < this.commandList.length; inc ++) {
-        instructionList.push(renderInstruction(this.commandList[inc]))
+    for (var inc = 0; inc < commandList.length; inc ++) {
+        instructionList.push(renderInstruction(commandList[inc]))
     }
 }
 
-const CmdInput = () => {
-    return(
-        <div className='container'>
-            <div className="card">
-                <div className="card-body">
-                    <h4 className="card-title">Edit the next command here!</h4>
-                    {/*inline form*/}
-                    <form className="form-inline" onSubmit={this.onSubmit}>
-                        <div className="form-group">
-                            <div className="dropdown">
-                                <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                        value={this.state.cmd} onChange={this.onChangeCmd}>
-                                    Command
-                                </button>
-                                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    {displayAvailableCommands(maxCommands)}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="form-group">
-                            <label> a_am: </label>
-                            <input type="text" required className="form-control" value={this.state.a_am} onChange={this.onChangea_am} />
-                        </div>
-                        <div className="form-group">
-                            <label> a: </label>
-                            <input type="text" required className="form-control" value={this.state.a} onChange={this.onChangea} />
-                        </div>
-                        <div className="form-group">
-                            <label> b_am: </label>
-                            <input type="text" required className="form-control" value={this.state.b_am} onChange={this.onChangeb_am} />
-                        </div>
-                        <div className="form-group">
-                            <label> b: </label>
-                            <input type="text" required className="form-control" value={this.state.b} onChange={this.onChangeb} />
-                        </div>
-                        <div className="form-group">
-                            <label> MOD: </label>
-                            <input type="text" required className="form-control" value={this.state.MOD} onChange={this.onChangeMOD} />
-                        </div>
-                        <button type="submit" className="btn btn-default">Submit</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    )
-}
+// const CmdInput = () => {
+//     return(
+//
+//     )
+// }
 
 export default class NewWarriorComponent extends Component {
 
@@ -209,7 +170,7 @@ export default class NewWarriorComponent extends Component {
         const Warrior = {
             name: this.state.name,
             dateCreated: this.state.dateCreated,
-            commandList: this.state.commandList,
+            List: this.state.commandList,
         }
         console.log(Warrior)
         axios.post('http://localhost:3000/play/add/', Warrior)
@@ -256,35 +217,79 @@ export default class NewWarriorComponent extends Component {
                 <div className='row'>
                     <div className='col-12'>
                         <h1>Create A New Warrior</h1>
+                        <br />
                     </div>
                 </div>
                 <div className='row'>
                     <div className='col-md-6'>
-                        <form className="form-inline" onSubmit={this.onSubmitName}>
-                            <div className="form-group">
-                                <label> Name Your Warrior </label>
-                                <input type="text" required className="form-control" value={this.state.name} onChange={this.onChangeName} />
-                            </div>
-                            <button type="submit" className="btn btn-default">Save Name</button>
+                        <form onSubmit={this.onSubmitName} className='form-inline'>
+                            <label> Name Your Warrior: </label>
+                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='Warrior 1' value={this.state.name} onChange={this.onChangeName} />
+                            <button type="submit" className="btn btn-success ml-2 mb-2 mr-sm-2">Save Name</button>
                         </form>
-                        <br />
-                        {/*not sure if you can put a card inside a card ...*/}
+
+
                         <div className="card">
                             <div className="card-body">
                                 <h4 className="card-title">Your Warrior </h4>
-                                {displayChosenInstructions()}
+                                {displayChosenInstructions(this.state.commandList)}
                             </div>
                         </div>
                         <br />
-                        <CmdInput/>
+
+                        <div className="card">
+                            <div className="card-body">
+                                <h4 className="card-title">Edit the next command here!</h4>
+                                {/*inline form*/}
+                                <form onSubmit={this.onSubmit}>
+                                    <div className='form-inline'>
+                                        <div className='form-group'>
+                                            <div className="dropdown">
+                                                <button className="btn btn-secondary dropdown-toggle ml-2 mb-2 mr-sm-2" type="button" id="dropdownMenuButton"
+                                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                                        value={this.state.cmd} onChange={this.onChangeCmd}>
+                                                    Command
+                                                </button>
+                                                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    {/*{displayAvailableCommands(maxCommands)}*/}
+                                                    <a className="dropdown-item" href="#">Dat</a>
+                                                    <a className="dropdown-item" href="#">Mov</a>
+                                                    <a className="dropdown-item" href="#">Slt</a>
+                                                    <a className="dropdown-item" href="#">Jmp</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='Modifier' value={this.state.MOD} onChange={this.onChangeMOD} />
+                                        </div>
+                                        <button type="submit" className="btn btn-success ml-2 mb-2 mr-sm-2">Submit</button>
+                                    </div>
+                                    <div className='form-inline'>
+                                        <div className="form-group">
+                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='A_AM (#)' value={this.state.a_am} onChange={this.onChangea_am} />
+                                        </div>
+                                        <div className="form-group">
+                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='A (0)' value={this.state.a} onChange={this.onChangea} />
+                                        </div>
+                                    </div>
+                                    <div className='form-inline'>
+                                        <div className="form-group">
+                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='B_AM (#)' value={this.state.b_am} onChange={this.onChangeb_am} />
+                                        </div>
+                                        <div className="form-group">
+                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='B (0)' value={this.state.b} onChange={this.onChangeb} />
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <br />
+                        <button type="button" onClick={this.onSave} className="btn btn-success">Save Your Warrior!</button>
                     </div>
                     <div className='col-md-6'>
-                        <h3>View your Warrior in Action here</h3>
-                        <PlayComponent p2code={this.state.commandList} runBoo={this.state.runBool}/>
+                        <h3>Test Your Warrior Here</h3>
+                        <PlayComponent p2code={this.state.commandList} btnname={'testbtn'}/>
                         {/*// todo this isn't the correct implementation of the play component; we need to have the warriors from our state factor into that play component hmmmmmm*/}
-                        <button type="button" onClick={this.onRun} className="btn btn-success">Test/Stop Test</button>
-                        <button type="button" onClick={this.onSave} className="btn btn-success">Save Your Warrior!</button>
-
                     </div>
                 </div>
             </div>
