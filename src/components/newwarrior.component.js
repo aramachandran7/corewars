@@ -45,26 +45,26 @@ const cmdkey = {
 const memory_size = 625;
 
 
-
-
-
-const renderInstruction = (commandObject) => {
-    console.log(commandObject.values)
+const displayChosenInstructions = (commandList) => {
+    // var instructionList = []
+    // for (var inc = 0; inc < commandList.length; inc ++) {
+    //     // instructionList.push(renderInstruction(commandList[inc]))
+    //     instructionList.push(commandList[inc]);
+    // }
     return(
-        <div className="card">
-            <div className="card-body">
-                <h4 className="card-title">{typeof(commandObject)}</h4>
-                <p className="card-text">a_am: {commandObject.values.a_am} | a: {commandObject.values.a} | b_am: {commandObject.values.b_am} | b: {commandObject.values.b} | mod: {commandObject.values.mod} |</p>
-            </div>
+        <div>
+            {commandList.map(instruction =>
+                <div className="card">
+                    <div className="card-body">
+                        <h4 className="card-title">{instruction.values().name}</h4>
+                        <p className="card-text">a_am: <b>{instruction.values().a_am}</b> | a: <b>{instruction.values().a}</b> | b_am: <b>{instruction.values().b_am}</b> | b: <b>{instruction.values().b}</b> | mod: <b>{instruction.values().mod}</b></p>
+                        {/*add in buttons to delete, new delete function, how do you execute commands? */}
+                        {/*add in / edit?? */}
+                    </div>
+                </div>
+            )}
         </div>
     )
-
-}
-const displayChosenInstructions = (commandList) => {
-    var instructionList = []
-    for (var inc = 0; inc < commandList.length; inc ++) {
-        instructionList.push(renderInstruction(commandList[inc]))
-    }
 }
 
 // const CmdInput = () => {
@@ -114,7 +114,7 @@ export default class NewWarriorComponent extends Component {
 
     componentDidMount() {
         // grabbing info for testing dropdown
-        axios.get('http://localhost:3000/play/add/')
+        axios.get('http://localhost:3000/play/new/')
             .then( (response) => {
                 if (response.data.length >0){
                     this.setState({
@@ -177,35 +177,37 @@ export default class NewWarriorComponent extends Component {
             List: this.state.commandList,
         }
         console.log(Warrior)
-        axios.post('http://localhost:3000/play/add/', Warrior)
+        axios.post('http://localhost:3000/play/new/', Warrior)
             .then(res=> console.log(res.data))
         window.location = '/'
     }
 
-    //dummy code
+    //dummy function
     onSubmitName(e){}
 
     onSubmit(e){
+        e.preventDefault()
+        console.log(this.state.a)
         var newCommandList = this.state.commandList
-
+        console.log(newCommandList)
         switch (this.state.cmd){
-            case 'Mov': newCommandList.push(Mov(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Add': newCommandList.push(Add(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Dat': newCommandList.push(Dat(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Div': newCommandList.push(Div(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Djn': newCommandList.push(Djn(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Jmn': newCommandList.push(Jmn(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Jmp': newCommandList.push(Jmp(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Jmz': newCommandList.push(Jmz(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Slt': newCommandList.push(Slt(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Sne': newCommandList.push(Sne(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Spl': newCommandList.push(Spl(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Sub': newCommandList.push(Sub(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Mod': newCommandList.push(Mod(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Mul': newCommandList.push(Mul(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Seq': newCommandList.push(Seq(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Mov': newCommandList.push(new Mov(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Add': newCommandList.push(new Add(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Dat': newCommandList.push(new Dat(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Div': newCommandList.push(new Div(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Djn': newCommandList.push(new Djn(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Jmn': newCommandList.push(new Jmn(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Jmp': newCommandList.push(new Jmp(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Jmz': newCommandList.push(new Jmz(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Slt': newCommandList.push(new Slt(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Sne': newCommandList.push(new Sne(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Spl': newCommandList.push(new Spl(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Sub': newCommandList.push(new Sub(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Mod': newCommandList.push(new Mod(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Mul': newCommandList.push(new Mul(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Seq': newCommandList.push(new Seq(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
         }
-
+        console.log(newCommandList)
         this.setState({
             commandList: newCommandList,
             cmd:'',
@@ -216,6 +218,7 @@ export default class NewWarriorComponent extends Component {
             mod:'',
             // set other cmd values to restart
         })
+
 
 
         //
@@ -238,8 +241,7 @@ export default class NewWarriorComponent extends Component {
                             <button type="submit" className="btn btn-success ml-2 mb-2 mr-sm-2">Save Name</button>
                         </form>
 
-
-                        <div className="card">
+                        <div className="card shadow rounded">
                             <div className="card-body">
                                 <h4 className="card-title">Your Warrior </h4>
                                 {displayChosenInstructions(this.state.commandList)}
@@ -247,7 +249,7 @@ export default class NewWarriorComponent extends Component {
                         </div>
                         <br />
 
-                        <div className="card">
+                        <div className="card shadow rounded">
                             <div className="card-body">
                                 <h4 className="card-title">Edit the next command here!</h4>
                                 {/*inline form*/}
@@ -282,11 +284,11 @@ export default class NewWarriorComponent extends Component {
                             </div>
                         </div>
                         <br />
-                        <button type="button" onClick={this.onSave} className="btn btn-success">When Finished, Save Your Warrior!</button>
+                        <button type="button" onClick={this.onSave} className="btn btn-success shadow">When Finished, Save Your Warrior!</button>
                     </div>
                     <div className='col-md-6'>
                         <h3>Test Your Warrior Here</h3>
-                        <PlayComponent p2code={this.state.commandList} btnname={'testbtn'}/>
+                        <PlayComponent p2code={this.state.commandList}/>
                         {/*// todo this isn't the correct implementation of the play component; we need to have the warriors from our state factor into that play component hmmmmmm*/}
                     </div>
                 </div>

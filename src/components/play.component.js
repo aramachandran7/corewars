@@ -15,10 +15,14 @@ const INTERVAL = 0
 export default class Play extends Component {
     constructor(props) {
         super();
-        var memory_size = 625
+        const memory_size = 625
         var memory = this.init(memory_size)
+
+
         var player1_code = [new Mov(0, 1, "$", "$", "I", memory_size)] // array of commands
-        // var player2_code = [new Add(4, 3, '#','$', 'AB', memory_size),
+        // var player1_code = props.p1code;
+
+        // const player2_code = [new Add(4, 3, '#','$', 'AB', memory_size),
         //     new Mov(2, 2, "$", "@", "I", memory_size),
         //     new Jmp(-2, 0,'$', '$', '', memory_size),
         //     new Dat(0, 0, '$', '$', '', memory_size)]
@@ -31,7 +35,7 @@ export default class Play extends Component {
             memory_size: memory_size,
             memory: memory,
             players: players,
-            game_length: 1000,
+            game_length: 2000,
             final_length: 0,
             done: null,
             current_step: 1,
