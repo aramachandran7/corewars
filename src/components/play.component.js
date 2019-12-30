@@ -1,7 +1,7 @@
 //React play page
 
 import React, {Component} from "react"
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import Cell from  './corewars/canvas.component'
 import { Command, Add, Dat, Div, Djn, Jmn,
     Jmp, Jmz, Mod, Mov, Mul, Seq,
@@ -28,10 +28,11 @@ export default class Play extends Component {
         //     new Dat(0, 0, '$', '$', '', memory_size)]
         var player2_code = props.p2code
 
-        var code = [player1_code, player2_code]
-        var players = this.make_players(memory, code)
+        // this is your goddamn problem!
+        var players = this.make_players(memory, [player1_code, player2_code])
 
         this.state = {
+            raw_code: [player1_code, player2_code],
             memory_size: memory_size,
             memory: memory,
             players: players,
@@ -137,6 +138,10 @@ export default class Play extends Component {
     }
 
     start() {
+        var players = this.make_players(this.state.memory, this.state.raw_code)
+        this.setState({
+            players:players,
+        })
         if (!this.state.in_game) {
             this.setState({in_game: true}, () => {this.forward()})}
     }

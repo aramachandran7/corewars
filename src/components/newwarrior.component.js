@@ -45,26 +45,35 @@ const cmdkey = {
 const memory_size = 625;
 
 
-const displayChosenInstructions = (commandList) => {
+const displayChosenInstructions = (commandList, onDeleteCommand) => {
     // var instructionList = []
     // for (var inc = 0; inc < commandList.length; inc ++) {
     //     // instructionList.push(renderInstruction(commandList[inc]))
     //     instructionList.push(commandList[inc]);
     // }
-    return(
-        <div>
-            {commandList.map(instruction =>
-                <div className="card">
-                    <div className="card-body">
-                        <h4 className="card-title">{instruction.values().name}</h4>
-                        <p className="card-text">a_am: <b>{instruction.values().a_am}</b> | a: <b>{instruction.values().a}</b> | b_am: <b>{instruction.values().b_am}</b> | b: <b>{instruction.values().b}</b> | mod: <b>{instruction.values().mod}</b></p>
-                        {/*add in buttons to delete, new delete function, how do you execute commands? */}
-                        {/*add in / edit?? */}
+
+    if (commandList.length === 0){}
+    else {
+        return (
+            <div>
+                {commandList.map(instruction =>
+                    <div className="card">
+                        <div className="card-body">
+                            <h4 className="card-title">{instruction.values().name}</h4>
+                            <p className="card-text">a_am: <b>{instruction.values().a_am}</b> |
+                                a: <b>{instruction.values().a}</b> | b_am: <b>{instruction.values().b_am}</b> |
+                                b: <b>{instruction.values().b}</b> | mod: <b>{instruction.values().mod}</b></p>
+                            <button type="button" onClick={onDeleteCommand} className="btn btn-danger shadow">Delete
+                                this Command
+                            </button>
+                            {/*add in buttons to delete, new delete function, how do you execute commands? */}
+                            {/*add in / edit?? */}
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
-    )
+                )}
+            </div>
+        )
+    }
 }
 
 // const CmdInput = () => {
@@ -80,7 +89,7 @@ export default class NewWarriorComponent extends Component {
 
         this.onSubmit = this.onSubmit.bind(this)
         this.onSave = this.onSave.bind(this)
-        this.onRun = this.onRun.bind(this)
+        this.onDeleteCommand = this.onDeleteCommand.bind(this)
 
         this.onChangeName = this.onChangeName.bind(this)
         this.onChangea = this.onChangea.bind(this)
@@ -164,9 +173,20 @@ export default class NewWarriorComponent extends Component {
     }
 
 
-    onRun(e){
+    onDeleteCommand(e){
+        // this command needs to delete a single command from the commandList. However, how do we pass a parameter
+        // (with e, i guess) to specify which item on the list will be delted?
+        // currently it will just delete the last one.
+        var newCommandList = this.state.commandList
+        console.log(newCommandList)
+        // test:
+        newCommandList = newCommandList.pop()
+
+        // const len = newCommandList.length
+        // newCommandList = newCommandList.splice(len-1, 1)
+        console.log(newCommandList)
         this.setState({
-            runBool: !this.state.runBool,
+            commandList: newCommandList,
         })
     }
     onSave(e){
@@ -244,7 +264,7 @@ export default class NewWarriorComponent extends Component {
                         <div className="card shadow rounded">
                             <div className="card-body">
                                 <h4 className="card-title">Your Warrior </h4>
-                                {displayChosenInstructions(this.state.commandList)}
+                                {displayChosenInstructions(this.state.commandList, this.onDeleteCommand)}
                             </div>
                         </div>
                         <br />
