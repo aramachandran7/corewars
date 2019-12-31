@@ -10,14 +10,18 @@ export default function IndexComponent(){
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-4">
+                    <div className="col-6">
                         <h3>Thanks for checking us out!</h3>
-                        <p> We're still in a super early dev stage. Super Duper Early. Thanks for your patience, and our apologies for the bugs, shitty UI, etc! :) </p>
-                        <p>Built with ❤️by Adi & Eamon</p>
+                        <p>We're still in a super early dev stage, and are super open to feedback, comments, and concerns. Thanks for your patience & support!</p>
+                        <br />
                         <Link to="/play/">
-                            <button type="button" className="btn btn-success">Play Now!!</button>
+                            <button type="button" className="btn btn-outline-success mb-2 mr-sm-2">Play ➡️</button>
                         </Link>
-                        <a href='../downloads/hype.txt' download><button type="button" className="btn btn-success">Download instructions</button></a>
+                        <a href='../downloads/hype.txt' download><button type="button" className="btn btn-outline-success ml-2 mb-2 mr-sm-2">Instructions ⬇️</button></a>
+                        <br />
+                        <br />
+                        <br />
+                        <p>Built with ❤️ by Adi & Eamon.</p>
                     </div>
                 </div>
             </div>

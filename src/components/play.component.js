@@ -6,17 +6,32 @@ import Cell from  './corewars/canvas.component'
 import { Command, Add, Dat, Div, Djn, Jmn,
     Jmp, Jmz, Mod, Mov, Mul, Seq,
     Slt, Sne, Spl, Sub } from  './corewars/instructions'
+import 'bootstrap/dist/js/bootstrap.bundle';
+
+
 
 
 const HEIGHT = 600
 const WIDTH = 800
 const INTERVAL = 0
 
+const Warrior = (props) => {
+    return(
+        <div>
+            {/*<a className="dropdown-item" href="#" value={props.warrior} >{props.warrior.name} | {props.warrior.commandList.length}</a>*/}
+            <button className="dropdown-item" type="button" value={props.warrior}> name: {props.warrior.name} | length: {props.warrior.commandList.length}</button>
+        </div>
+    )
+}
+
 export default class Play extends Component {
     constructor(props) {
         super(props);
         const memory_size = 625
         var memory = this.init(memory_size)
+
+
+        this.onChangePlayer1Code = this.onChangePlayer1Code.bind(this)
 
         var player1_code = [new Mov(0, 1, "$", "$", "I", memory_size)] // array of commands
         // var player1_code = props.p1code;
@@ -27,11 +42,11 @@ export default class Play extends Component {
         //     new Dat(0, 0, '$', '$', '', memory_size)]
         var player2_code = props.p2code
 
-        // this is your goddamn problem!
         var players = this.make_players(memory, [player1_code, player2_code])
 
         this.state = {
             raw_code: [player1_code, player2_code],
+            player1Code: player1_code,
             memory_size: memory_size,
             memory: memory,
             players: players,
@@ -41,7 +56,18 @@ export default class Play extends Component {
             current_step: 1,
             current_player: 0,
             in_game: false,
+            warriors: props.warriorList,
         }
+    }
+
+    onChangePlayer1Code(e){
+        let newPlayers = this.state.raw_code.map(x => (Object.assign(Object.create( Object.getPrototypeOf(x)), x)));
+        newPlayers[0] = e.target.value;
+
+        this.setState({
+            raw_code:newPlayers,
+            players: this.make_players(this.state.memory, newPlayers)
+        })
     }
 
     init(memory_size) {
@@ -160,9 +186,17 @@ export default class Play extends Component {
         })
     }
 
+    warriorListFunc(){
+        this.state.warriors.map(currentWarrior => {
+            return(<Warrior warrior={currentWarrior}/>)
+        })
+    }
+
     componentWillReceiveProps(nextProps) {
         const memory_size = 625
         var memory = this.init(memory_size)
+        this.onChangePlayer1Code = this.onChangePlayer1Code.bind(this)
+
         var player1_code = [new Mov(0, 1, "$", "$", "I", memory_size)] // array of commands
         var player2_code = nextProps.p2code
         console.log(player1_code)
@@ -171,6 +205,7 @@ export default class Play extends Component {
         var players = this.make_players(memory, [player1_code, player2_code])
         this.setState({
             raw_code: [player1_code, player2_code],
+            player1Code: player1_code,
             memory_size: memory_size,
             memory: memory,
             players: players,
@@ -180,6 +215,7 @@ export default class Play extends Component {
             current_step: 1,
             current_player: 0,
             in_game: false,
+            warrior: nextProps.warriors,
         })
     }
 
@@ -187,13 +223,23 @@ export default class Play extends Component {
         return(
             <div className="container">
                 <div className='row'>
-                    <button className="btn btn-secondary mt-2 mr-sm-2" onClick={this.start.bind(this)}>🏃‍</button>
-                    <button className="btn btn-danger ml-2 mt-2 mr-sm-2" onClick={this.quickEnd.bind(this)}>❌</button>
+                    <button className="btn btn-outline-success mt-2 mr-sm-2" onClick={this.start.bind(this)}>🏃‍</button>
+                    <button className="btn btn-outline-danger ml-2 mt-2 mr-sm-2" onClick={this.quickEnd.bind(this)}>❌</button>
+                    {/*test dropdown*/}
+                    <div className="btn-group dropright">
+                        <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onChange={this.onChangePlayer1Code}>
+                            Select Opponent ⚔️
+                        </button>
+                        <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            {this.warriorListFunc()}
+                        </div>
+                    </div>
 
                     {/*<p id="demo">{this.state.done}</p>*/}
                 </div>
                 <br />
-                <div className='row ml-0' >
+                <div className='row float-left' >
                     <div className="Board" style={{height: HEIGHT, width: WIDTH}}>
                         {this.state.memory.map(cell => (
                             <Cell
