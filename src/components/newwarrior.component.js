@@ -56,14 +56,14 @@ const displayChosenInstructions = (commandList, onDeleteCommand) => {
     else {
         return (
             <div>
-                {commandList.map(instruction =>
+                {commandList.map((instruction, index) =>
                     <div className="card">
                         <div className="card-body">
                             <h4 className="card-title">{instruction.values().name}</h4>
                             <p className="card-text">a_am: <b>{instruction.values().a_am}</b> |
                                 a: <b>{instruction.values().a}</b> | b_am: <b>{instruction.values().b_am}</b> |
                                 b: <b>{instruction.values().b}</b> | mod: <b>{instruction.values().mod}</b></p>
-                            <button type="button" onClick={onDeleteCommand} className="btn btn-danger shadow">Delete
+                            <button type="button" onClick={() => {onDeleteCommand(index)}} className="btn btn-danger shadow">Delete
                                 this Command
                             </button>
                             {/*add in buttons to delete, new delete function, how do you execute commands? */}
@@ -96,7 +96,7 @@ export default class NewWarriorComponent extends Component {
         this.onChangeb = this.onChangeb.bind(this)
         this.onChangea_am = this.onChangea_am.bind(this)
         this.onChangeb_am = this.onChangeb_am.bind(this)
-        this.onChangeMOD = this.onChangeMOD.bind(this)
+        this.onChangemod = this.onChangemod.bind(this)
         this.onChangeCmd = this.onChangeCmd.bind(this)
 
 
@@ -160,7 +160,7 @@ export default class NewWarriorComponent extends Component {
             b_am:e.target.value
         })
     }
-    onChangeMOD(e){
+    onChangemod(e){
         this.setState({
             mod:e.target.value
         })
@@ -173,17 +173,21 @@ export default class NewWarriorComponent extends Component {
     }
 
 
-    onDeleteCommand(e){
+    onDeleteCommand(index){
         // this command needs to delete a single command from the commandList. However, how do we pass a parameter
         // (with e, i guess) to specify which item on the list will be delted?
         // currently it will just delete the last one.
-        var newCommandList = this.state.commandList
-        console.log(newCommandList)
+        let newCommandList = this.state.commandList.map(x => (Object.assign(Object.create( Object.getPrototypeOf(x)), x)))
+        console.log("Old") 
+        console.log(newCommandList) 
+        console.log("Index: " + index)
         // test:
-        newCommandList = newCommandList.pop()
+        // newCommandList = newCommandList.pop()
+        newCommandList.splice(index, 1)
 
         // const len = newCommandList.length
         // newCommandList = newCommandList.splice(len-1, 1)
+        console.log("New")
         console.log(newCommandList)
         this.setState({
             commandList: newCommandList,
@@ -281,7 +285,7 @@ export default class NewWarriorComponent extends Component {
                                             <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='Instruction (Mov)' value={this.state.cmd} onChange={this.onChangeCmd} />
                                         </div>
                                         <div className="form-group">
-                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='Modifier (I)' value={this.state.MOD} onChange={this.onChangeMOD} />
+                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='Modifier (I)' value={this.state.mod} onChange={this.onChangemod} />
                                         </div>
                                     </div>
                                     <div className='form-inline'>
