@@ -150,6 +150,16 @@ export default class Play extends Component {
         this.setState({done: winner, final_length: final_length, in_game: false})
     }
 
+    quickEnd(){
+        this.setState({
+            done: null,
+            final_length: 0,
+            in_game: false,
+            memory: this.init(this.state.memory_size)
+
+        })
+    }
+
     componentWillReceiveProps(nextProps) {
         const memory_size = 625
         var memory = this.init(memory_size)
@@ -177,7 +187,9 @@ export default class Play extends Component {
         return(
             <div className="container">
                 <div className='row'>
-                    <button className="btn btn-secondary mt-2 mr-sm-2" onClick={this.start.bind(this)}>Test Warrior</button>
+                    <button className="btn btn-secondary mt-2 mr-sm-2" onClick={this.start.bind(this)}>🏃‍</button>
+                    <button className="btn btn-danger ml-2 mt-2 mr-sm-2" onClick={this.quickEnd.bind(this)}>❌</button>
+
                     {/*<p id="demo">{this.state.done}</p>*/}
                 </div>
                 <br />

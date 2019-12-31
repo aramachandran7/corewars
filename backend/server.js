@@ -11,10 +11,13 @@ const app = express()
 const playRouter = require('./routes/play')
 app.use('/play/', playRouter)
 
+app.use(cors)
+app.use(express.json())
 
 // MGDB setup
 // mongodb+srv://aramachandran:Belur108@usertesting-cdidq.mongodb.net/test?retryWrites=true&w=majority
-const db = 'mongodb+srv://aramachandran:Belur108@warriorscluster-bwcic.mongodb.net/test?retryWrites=true&w=majority\n';
+var db = 'mongodb+srv://aramachandran:Belur108@warriorscluster-bwcic.mongodb.net/test?retryWrites=true&w=majority';
+// db = process.env.ATLAS_URI
 mongoose.connect(db,{ useNewUrlParser: true })
     .then(() => console.log("MongoDB successfully connected"))
     .catch(err => console.log(err));

@@ -59,13 +59,12 @@ const displayChosenInstructions = (commandList, onDeleteCommand) => {
                 {commandList.map((instruction, index) =>
                     <div className="card">
                         <div className="card-body">
-                            <h4 className="card-title">{instruction.values().name}</h4>
+                            <h3>{instruction.values().name}</h3>
+                            <button type="button" onClick={() => {onDeleteCommand(index)}} className="btn btn-danger shadow">🗑️
+                            </button>
                             <p className="card-text">a_am: <b>{instruction.values().a_am}</b> |
                                 a: <b>{instruction.values().a}</b> | b_am: <b>{instruction.values().b_am}</b> |
                                 b: <b>{instruction.values().b}</b> | mod: <b>{instruction.values().mod}</b></p>
-                            <button type="button" onClick={() => {onDeleteCommand(index)}} className="btn btn-danger shadow">Delete
-                                this Command
-                            </button>
                             {/*add in buttons to delete, new delete function, how do you execute commands? */}
                             {/*add in / edit?? */}
                         </div>
@@ -212,8 +211,8 @@ export default class NewWarriorComponent extends Component {
     onSubmit(e){
         e.preventDefault()
         console.log(this.state.a)
-        var newCommandList = this.state.commandList
-        console.log(newCommandList)
+        var newCommandList = this.state.commandList.map(x => (Object.assign(Object.create( Object.getPrototypeOf(x)), x)))
+        console.log('old command list: '+newCommandList)
         console.log("A: " + this.state.a)
         console.log("Mod: " + this.state.mod)
         switch (this.state.cmd){
@@ -255,21 +254,21 @@ export default class NewWarriorComponent extends Component {
             <div className='container'>
                 <div className='row'>
                     <div className='col-12'>
-                        <h1>Create A New Warrior</h1>
+                        <h1> Warrior (+ 1)</h1>
                         <br />
                     </div>
                 </div>
                 <div className='row'>
                     <div className='col-md-6'>
                         <form onSubmit={this.onSubmitName} className='form-inline'>
-                            <label> Name Your Warrior: </label>
-                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='Warrior 1' value={this.state.name} onChange={this.onChangeName} />
-                            <button type="submit" className="btn btn-success ml-2 mb-2 mr-sm-2">Save Name</button>
+                            <label> Name 🍭 : </label>
+                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='New Warrior' value={this.state.name} onChange={this.onChangeName} />
+                            <button type="submit" className="btn btn-success ml-2 mb-2 mr-sm-2">✔️</button>
                         </form>
 
                         <div className="card shadow rounded">
                             <div className="card-body">
-                                <h4 className="card-title">Your Warrior </h4>
+                                <h5 className="card-title ml-2">Your Warrior </h5>
                                 {displayChosenInstructions(this.state.commandList, this.onDeleteCommand)}
                             </div>
                         </div>
@@ -277,45 +276,44 @@ export default class NewWarriorComponent extends Component {
 
                         <div className="card shadow rounded">
                             <div className="card-body">
-                                <h4 className="card-title">Edit the next command here!</h4>
+                                <h5 className="card-title ml-2">Command (+ 1)</h5>
                                 {/*inline form*/}
                                 <form onSubmit={this.onSubmit}>
                                     <div className='form-inline'>
                                         <div className='form-group'>
-                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='Instruction (Mov)' value={this.state.cmd} onChange={this.onChangeCmd} />
+                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='(Mov)' value={this.state.cmd} onChange={this.onChangeCmd} />
                                         </div>
                                         <div className="form-group">
-                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='Modifier (I)' value={this.state.mod} onChange={this.onChangemod} />
+                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='(I)' value={this.state.mod} onChange={this.onChangemod} />
                                         </div>
                                     </div>
                                     <div className='form-inline'>
                                         <div className="form-group">
-                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='A_AM ($)' value={this.state.a_am} onChange={this.onChangea_am} />
+                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='($)' value={this.state.a_am} onChange={this.onChangea_am} />
                                         </div>
                                         <div className="form-group">
-                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='A (0)' value={this.state.a} onChange={this.onChangea} />
+                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='(0)' value={this.state.a} onChange={this.onChangea} />
                                         </div>
                                     </div>
                                     <div className='form-inline'>
                                         <div className="form-group">
-                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='B_AM ($)' value={this.state.b_am} onChange={this.onChangeb_am} />
+                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='($)' value={this.state.b_am} onChange={this.onChangeb_am} />
                                         </div>
                                         <div className="form-group">
-                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='B (1)' value={this.state.b} onChange={this.onChangeb} />
+                                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='(1)' value={this.state.b} onChange={this.onChangeb} />
                                         </div>
                                     </div>
-                                    <button type="submit" className="btn btn-success ml-2 mb-2 mr-sm-2">Submit</button>
+                                    <button type="submit" className="btn btn-success ml-2 mb-2 mr-sm-2">✔️</button>
 
                                 </form>
                             </div>
                         </div>
                         <br />
-                        <button type="button" onClick={this.onSave} className="btn btn-success shadow">When Finished, Save Your Warrior!</button>
+                        <button type="button" onClick={this.onSave} className="btn btn-success shadow">Totally Finished? Save ✔️</button>
                     </div>
                     <div className='col-md-6'>
-                        <h3>Test Your Warrior Here</h3>
+                        {/*<h3>Test Your Warrior Here</h3>*/}
                         <PlayComponent p2code={this.state.commandList}/>
-                        {/*// todo this isn't the correct implementation of the play component; we need to have the warriors from our state factor into that play component hmmmmmm*/}
                     </div>
                 </div>
             </div>
