@@ -14,10 +14,9 @@ const INTERVAL = 0
 
 export default class Play extends Component {
     constructor(props) {
-        super();
+        super(props);
         const memory_size = 625
         var memory = this.init(memory_size)
-
 
         var player1_code = [new Mov(0, 1, "$", "$", "I", memory_size)] // array of commands
         // var player1_code = props.p1code;
@@ -96,13 +95,13 @@ export default class Play extends Component {
         const {processes, current} = players[current_player]
         const address = processes[current]
 
-        let copy_memory = memory.map(x =>
-            (Object.assign( Object.create( Object.getPrototypeOf(x)), x)))
+        // let copy_memory = memory.map(x =>
+        //     (Object.assign( Object.create( Object.getPrototypeOf(x)), x)))
 
 
         let copy_processes = [...processes]
         var copy_current = current
-        let [new_memory, new_processes, new_current] = memory[address].call(copy_memory,
+        let [new_memory, new_processes, new_current] = memory[address].call(memory,
             copy_processes, copy_current, current_player)
         new_current = new_current % new_processes.length
 
@@ -119,6 +118,7 @@ export default class Play extends Component {
     forward(recur=true) {
         const {current_step, current_player, players, game_length, in_game} = this.state
         const next_player = (current_player === 0 ? 1 : 0)
+        console.log(players)
 
         if (current_step === game_length)
             this.end(-1, game_length)
@@ -150,7 +150,27 @@ export default class Play extends Component {
         this.setState({done: winner, final_length: final_length, in_game: false})
     }
 
-    componentDidMount() {
+    componentWillReceiveProps(nextProps) {
+        const memory_size = 625
+        var memory = this.init(memory_size)
+        var player1_code = [new Mov(0, 1, "$", "$", "I", memory_size)] // array of commands
+        var player2_code = nextProps.p2code
+        console.log(player1_code)
+        console.log(player2_code)
+
+        var players = this.make_players(memory, [player1_code, player2_code])
+        this.setState({
+            raw_code: [player1_code, player2_code],
+            memory_size: memory_size,
+            memory: memory,
+            players: players,
+            game_length: 2000,
+            final_length: 0,
+            done: null,
+            current_step: 1,
+            current_player: 0,
+            in_game: false,
+        })
     }
 
     render(){

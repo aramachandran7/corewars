@@ -162,7 +162,7 @@ export default class NewWarriorComponent extends Component {
     }
     onChangeMOD(e){
         this.setState({
-            MOD:e.target.value
+            mod:e.target.value
         })
     }
 
@@ -210,6 +210,8 @@ export default class NewWarriorComponent extends Component {
         console.log(this.state.a)
         var newCommandList = this.state.commandList
         console.log(newCommandList)
+        console.log("A: " + this.state.a)
+        console.log("Mod: " + this.state.mod)
         switch (this.state.cmd){
             case 'Mov': newCommandList.push(new Mov(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
             case 'Add': newCommandList.push(new Add(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
