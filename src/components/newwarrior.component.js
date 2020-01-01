@@ -183,7 +183,7 @@ export default class NewWarriorComponent extends Component {
         console.log("A: " + this.state.a)
         console.log("Mod: " + this.state.mod)
         switch (this.state.cmd){
-            case 'Move': newCommandList.push(new Mov(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Copy': newCommandList.push(new Mov(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
             case 'Add': newCommandList.push(new Add(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
             case 'Blank': newCommandList.push(new Dat(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
             case 'Divide': newCommandList.push(new Div(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
@@ -252,7 +252,7 @@ export default class NewWarriorComponent extends Component {
                                         <div className='card-body'>
                                             <div className='form-inline'>
                                                 <div className='form-group'>
-                                                    <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='Command: (Move)' value={this.state.cmd} onChange={this.onChangeCmd} />
+                                                    <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='Command: (Copy)' value={this.state.cmd} onChange={this.onChangeCmd} />
                                                 </div>
                                                 <div className="form-group">
                                                     <input type="text" className="form-control ml-2 mb-2 mr-sm-2" placeholder='Command Modifier: (I)' value={this.state.mod} onChange={this.onChangemod} />
@@ -296,7 +296,7 @@ export default class NewWarriorComponent extends Component {
                             <div className='card body'>
                                 <h5 className='card-title ml-2 mt-2'>Command Options</h5>
                                 <p className='card-text'>
-                                    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Move</button>
+                                    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Copy</button>
                                     <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Blank</button>
                                     <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Add</button>
                                     <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Subtract</button>

@@ -150,7 +150,7 @@ class Add extends Command {
 
 //dat
 class Dat extends Command {
-    values(){return({name:'Dat',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
+    values(){return({name:'Blank',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
 
     _call(memory, processes, current, p){
         processes.splice(current, 1)
@@ -161,7 +161,7 @@ class Dat extends Command {
 
 //div
 class Div extends Command {
-    values(){return({name:'Div',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
+    values(){return({name:'Divide',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
 
     constructor(a, b, a_am, b_am, mod, memory, memory_size){
         super(a, b, a_am, b_am, mod, memory, memory_size)
@@ -216,7 +216,7 @@ class Div extends Command {
 
 //djn
 class Djn extends Command {
-    values(){return({name:'Djn',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
+    values(){return({name:'DecJumpNZ',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
 
     _cond(cond, processes, current, dest) {
         if (cond)
@@ -260,7 +260,7 @@ class Djn extends Command {
 
 //jmn
 class Jmn extends Command {
-    values(){return({name:'Jmn',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
+    values(){return({name:'JumpNZ',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
 
     _cond(cond, processes, current, dest) {
         if (cond)
@@ -292,7 +292,7 @@ class Jmn extends Command {
 
 //jmp
 class Jmp extends Command {
-    values(){return({name:'Jmp',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
+    values(){return({name:'Jump',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
 
     _call(memory, processes, current, p){
         var destination_index = this.get_true_index(this.a, this.a_am, memory)
@@ -304,7 +304,7 @@ class Jmp extends Command {
 
 //jmz
 class Jmz extends Command {
-    values(){return({name:'Jmz',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
+    values(){return({name:'JumpZ',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
 
     _cond(cond, processes, current, dest) {
         if (cond)
@@ -336,7 +336,7 @@ class Jmz extends Command {
 
 //mod
 class Mod extends Command {
-    values(){return({name:'Mod',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
+    values(){return({name:'Modulus',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
 
     _mod(source, target, processes, current){
         if (source === 0 && !this._flag) {
@@ -387,7 +387,7 @@ class Mod extends Command {
 
 //mov
 class Mov extends Command {
-    values(){return({name:'Mov',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
+    values(){return({name:'Copy',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
 
     _call(memory, processes, current, p){
         var source = this.get_true_index(this.a, this.a_am, memory)
@@ -433,7 +433,7 @@ class Mov extends Command {
 
 //mul
 class Mul extends Command {
-    values(){return({name:'Mul',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
+    values(){return({name:'Multiply',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
 
     _mul(source, target){
         var ret = target * source
@@ -477,7 +477,7 @@ class Mul extends Command {
 
 //seq
 class Seq extends Command {
-    values(){return({name:'Seq',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
+    values(){return({name:'SkipE',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
 
     _compare_commands(c1, c2) {
         if (Object.getPrototypeOf(c1) !== Object.getPrototypeOf(c2))
@@ -534,7 +534,7 @@ class Seq extends Command {
 
 //slt
 class Slt extends Command {
-    values(){return({name:'Slt',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
+    values(){return({name:'SkipL',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
 
     _compare(cond, processes, current) {
         if (cond)
@@ -577,7 +577,7 @@ class Slt extends Command {
 
 //sne
 class Sne extends Command {
-    values(){return({name:'Sne',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
+    values(){return({name:'SkipNE',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
 
     _compare_commands(c1, c2) {
         if (Object.getPrototypeOf(c1) !== Object.getPrototypeOf(c2))
@@ -634,7 +634,7 @@ class Sne extends Command {
 
 //spl
 class Spl extends Command {
-    values(){return({name:'Spl',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
+    values(){return({name:'Split',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
 
     _call(memory, processes, current, p){
         var destination_index = this.get_true_index(this.a, this.a_am, memory)
@@ -649,7 +649,7 @@ class Spl extends Command {
 
 //sub
 class Sub extends Command {
-    values(){return({name:'Sub',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
+    values(){return({name:'Subtract',a:this.a, b:this.b, a_am:this.a_am, b_am:this.b_am, mod:this.mod})}
 
     _sub(source, target){
         var ret = target - source
