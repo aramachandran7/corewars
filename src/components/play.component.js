@@ -24,6 +24,17 @@ const Warrior = (props) => {
     )
 }
 
+const RenderHoverInfo = (props) => {
+    return(
+        <div>
+            <p className="card-text"> <b>Command: {props.hoverProp.name}</b> a_am: <b>{props.hoverProp.a_am}</b> |
+            a: <b>{props.hoverProp.a}</b> | b_am: <b>{props.hoverProp.b_am}</b> |
+            b: <b>{props.hoverProp.b}</b> | mod: <b>{props.hoverProp.mod}</b></p>
+            {/*<p>index: {props.hoverProp}</p>*/}
+        </div>
+
+    )
+}
 export default class Play extends Component {
     constructor(props) {
         super(props);
@@ -32,6 +43,9 @@ export default class Play extends Component {
 
 
         this.onChangePlayer1Code = this.onChangePlayer1Code.bind(this)
+        this.onChangeHover = this.onChangeHover.bind(this)
+        this.onResetHover = this.onResetHover.bind(this)
+        this.onMouseToggle = this.onMouseToggle.bind(this)
 
         var player1_code = [new Mov(0, 1, "$", "$", "I", memory_size)] // array of commands
         // var player1_code = props.p1code;
@@ -57,7 +71,27 @@ export default class Play extends Component {
             current_player: 0,
             in_game: false,
             warriors: props.warriorList,
+            hoverInfo: {},
         }
+    }
+
+    onChangeHover(memIndex){
+        const instructionValues = this.state.memory[memIndex].values()
+
+        this.setState({
+            hoverInfo: instructionValues
+            // hoverInfo: memIndex
+        })
+    }
+
+    onResetHover(){
+        this.setState({
+            hoverInfo: null,
+        })
+    }
+
+    onMouseToggle(){
+        console.log('Mouse Toggled')
     }
 
     onChangePlayer1Code(e){
@@ -186,6 +220,14 @@ export default class Play extends Component {
         })
     }
 
+    quickEndThink(){
+        this.setState({
+            done: null,
+            final_length:0,
+            in_game:false,
+        })
+    }
+
     warriorListFunc(){
         this.state.warriors.map(currentWarrior => {
             return(<Warrior warrior={currentWarrior}/>)
@@ -196,6 +238,10 @@ export default class Play extends Component {
         const memory_size = 625
         var memory = this.init(memory_size)
         this.onChangePlayer1Code = this.onChangePlayer1Code.bind(this)
+        this.onChangeHover = this.onChangeHover.bind(this)
+        this.onResetHover = this.onResetHover.bind(this)
+        this.onMouseToggle = this.onMouseToggle.bind(this)
+
 
         var player1_code = [new Mov(0, 1, "$", "$", "I", memory_size)] // array of commands
         var player2_code = nextProps.p2code
@@ -216,6 +262,7 @@ export default class Play extends Component {
             current_player: 0,
             in_game: false,
             warrior: nextProps.warriors,
+            hoverInfo: ''
         })
     }
 
@@ -223,8 +270,9 @@ export default class Play extends Component {
         return(
             <div className="container">
                 <div className='row'>
-                    <button className="btn btn-outline-success mt-2 mr-sm-2" onClick={this.start.bind(this)}>🏃‍</button>
-                    <button className="btn btn-outline-danger ml-2 mt-2 mr-sm-2" onClick={this.quickEnd.bind(this)}>❌</button>
+                    <button className="btn btn-outline-success mb-2 mr-sm-2" onClick={this.start.bind(this)}>🏃‍</button>
+                    <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEndThink.bind(this)}>🤔 ❌</button>
+                    <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEnd.bind(this)}>❌</button>
                     {/*test dropdown*/}
                     <div className="btn-group dropright">
                         <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -235,8 +283,14 @@ export default class Play extends Component {
                             {this.warriorListFunc()}
                         </div>
                     </div>
-
-                    {/*<p id="demo">{this.state.done}</p>*/}
+                </div>
+                <div className='row'>
+                    <div className="card shadow rounded">
+                        <div className="card-body">
+                            <h4 className='card-title'>Hover'd Info</h4>
+                            <RenderHoverInfo hoverProp={this.state.hoverInfo}/>
+                        </div>
+                    </div>
                 </div>
                 <br />
                 <div className='row float-left' >
@@ -248,6 +302,12 @@ export default class Play extends Component {
                                 player_id = {cell.player_id}
                                 index = {cell.index}
                                 key = {cell.index}
+                                style={{onMouseEnter:this.onMouseToggle,
+                                        onMouseLeave:this.onMouseToggle,
+                                    }}
+
+                                // onHover = {this.onChangeHover}
+                                // onUnHover = {this.onResetHover}
                             />
                         ))}
                     </div>

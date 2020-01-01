@@ -187,20 +187,20 @@ export default class NewWarriorComponent extends Component {
             case 'Add': newCommandList.push(new Add(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
             case 'Blank': newCommandList.push(new Dat(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
             case 'Divide': newCommandList.push(new Div(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Djn': newCommandList.push(new Djn(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'DecJumpNZ': newCommandList.push(new Djn(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
             case 'JumpNZ': newCommandList.push(new Jmn(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
             case 'Jump': newCommandList.push(new Jmp(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
             case 'JumpZ': newCommandList.push(new Jmz(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Slt': newCommandList.push(new Slt(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Sne': newCommandList.push(new Sne(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Spl': newCommandList.push(new Spl(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Sub': newCommandList.push(new Sub(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Mod': newCommandList.push(new Mod(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Mul': newCommandList.push(new Mul(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
-            case 'Seq': newCommandList.push(new Seq(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'SkipL': newCommandList.push(new Slt(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'SkipNE': newCommandList.push(new Sne(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Split': newCommandList.push(new Spl(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Subtract': newCommandList.push(new Sub(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Modulus': newCommandList.push(new Mod(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'Multiply': newCommandList.push(new Mul(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
+            case 'SkipE': newCommandList.push(new Seq(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
             default: console.log('Command : ' + this.state.cmd + ' not recognized.');
         }
-        console.log('new command list. ')
+        console.log('new command list.')
         console.log(newCommandList)
         this.setState({
             commandList: newCommandList,
@@ -237,7 +237,7 @@ export default class NewWarriorComponent extends Component {
 
                         <div className="card shadow rounded">
                             <div className="card-body">
-                                <h5 className="card-title ml-2">{this.state.name}'s Commands </h5>
+                                <h4 className="card-title ml-2">{this.state.name}'s Commands </h4>
                                 {displayChosenInstructions(this.state.commandList, this.onDeleteCommand)}
                             </div>
                         </div>
@@ -252,10 +252,10 @@ export default class NewWarriorComponent extends Component {
                                         <div className='card-body'>
                                             <div className='form-inline'>
                                                 <div className='form-group'>
-                                                    <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='Command: (Mov)' value={this.state.cmd} onChange={this.onChangeCmd} />
+                                                    <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='Command: (Move)' value={this.state.cmd} onChange={this.onChangeCmd} />
                                                 </div>
                                                 <div className="form-group">
-                                                    <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='Command Modifier: (I)' value={this.state.mod} onChange={this.onChangemod} />
+                                                    <input type="text" className="form-control ml-2 mb-2 mr-sm-2" placeholder='Command Modifier: (I)' value={this.state.mod} onChange={this.onChangemod} />
                                                 </div>
                                             </div>
                                         </div>
@@ -290,9 +290,33 @@ export default class NewWarriorComponent extends Component {
                         </div>
                         <br />
                         <button type="button" onClick={this.onSave} className="btn btn-outline-success float-right">Totally Finished? Save ✔️</button>
+                        <br />
+                        <br />
+                        <div className='card shadow rounded'>
+                            <div className='card body'>
+                                <h5 className='card-title ml-2 mt-2'>Command Options</h5>
+                                <p className='card-text'>
+                                    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Move</button>
+                                    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Blank</button>
+                                    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Add</button>
+                                    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Subtract</button>
+                                    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Multiply</button>
+                                    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Divide</button>
+                                    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Modulus</button>
+                                    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Jump</button>
+                                    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>JumpZ</button>
+                                    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>JumpNZ</button>
+                                    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>DecJumpNZ</button>
+                                    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Split</button>
+                                    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>SkipE</button>
+                                    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>SkipNE</button>
+                                    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>SkipL</button>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                     <div className='col-md-6'>
-                        {/*<h3>Test Your Warrior Here</h3>*/}
+                        {/*<h3></h3>*/}
                         <PlayComponent warriorList={this.state.warriors} p2code={this.state.commandList}/>
                     </div>
                 </div>

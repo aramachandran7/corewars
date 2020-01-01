@@ -17,44 +17,20 @@ const Y_OFFSET = Math.floor((HEIGHT - CELL_SIZE * ROWS) / 2)
 
 
 
-// todo Test if this is faster
-// const Cell2 = () => {
-//     console.log("Rendered")
-//     const { index, player_id } = this.props
-//     const x = Math.floor(index / ROWS)
-//     const y = index % ROWS
-//     let bg_color
-//     switch(player_id) {
-//         case 0:
-//             bg_color = "red"
-//             break
-//         case 1:
-//             bg_color = "blue"
-//             break
-//         default:
-//             bg_color = "#eeeeee"
-//             break
-//
-//     return(
-//         <div className="Cell" style={{
-//             left: `${CELL_SIZE * x + X_OFFSET}px`,
-//             top: `${CELL_SIZE * y + Y_OFFSET}px`,
-//             width: `${CELL_SIZE}px`,
-//             height: `${CELL_SIZE}px`,
-//             backgroundColor: `${bg_color}`
-//         }}
-//         />
-//     )
-// }
-
 export default class Cell extends PureComponent {
     render() {
         console.log("Rendered")
-        const { index, player_id } = this.props
+        const { index, player_id, } = this.props
         const x = Math.floor(index / ROWS)
         const y = index % ROWS
         let bg_color
-        switch(player_id) {
+        // var hovered = false;
+
+        // if (hovered){
+        //     bg_color="#3C393F"
+        // }
+        // else {
+        switch (player_id) {
             case 0:
                 bg_color = "red"
                 break
@@ -64,14 +40,30 @@ export default class Cell extends PureComponent {
             default:
                 bg_color = "#eeeeee"
                 break
+            // }
         }
+        // const onMouseHover = () =>{
+        //     this.props.onHover(index)
+        // }
+        //
+        // const onMouseUnHover = () => {
+        //     this.props.onUnHover()
+        // }
+
+        // const onMouseToggle = () => {
+        //     console.log('mousetoggled')
+        //     hovered = !hovered;
+        // }
+
         return (
             <div className="Cell" style={{
                 left: `${CELL_SIZE * x + X_OFFSET}px`,
                 top: `${CELL_SIZE * y + Y_OFFSET}px`,
                 width: `${CELL_SIZE}px`,
                 height: `${CELL_SIZE}px`,
-                backgroundColor: `${bg_color}`
+                backgroundColor: `${bg_color}`,
+                // onMouseEnter: {onMouseToggle},
+                // onMouseLeave: {onMouseToggle},
             }}
             />
         )
