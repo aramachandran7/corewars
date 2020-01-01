@@ -4,7 +4,7 @@ import { Command, Add, Dat, Div, Djn, Jmn,
     Jmp, Jmz, Mod, Mov, Mul, Seq,
     Slt, Sne, Spl, Sub } from "./corewars/instructions";
 import PlayComponent from './play.component'
-
+import './corewars/canvas.component.css'
 
 const memory_size = 625;
 
@@ -177,11 +177,12 @@ export default class NewWarriorComponent extends Component {
 
     onSubmit(e){
         e.preventDefault()
-        console.log(this.state.a)
         var newCommandList = this.state.commandList.map(x => (Object.assign(Object.create( Object.getPrototypeOf(x)), x)))
-        console.log('old command list: '+newCommandList)
-        console.log("A: " + this.state.a)
-        console.log("Mod: " + this.state.mod)
+        // accounting for default properites
+
+        if (this.state.a_am === '') {this.setState({a_am: '$'})}
+        if (this.state.b_am === '') {this.setState({b_am: '$'})}
+
         switch (this.state.cmd){
             case 'Copy': newCommandList.push(new Mov(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
             case 'Add': newCommandList.push(new Add(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
@@ -246,44 +247,68 @@ export default class NewWarriorComponent extends Component {
                         <div className="card shadow rounded">
                             <div className="card-body">
                                 <form onSubmit={this.onSubmit}>
-                                    <h4 className="card-title ml-2">Add Command</h4>
+                                    <h4 className="card-title ml-2">Add a Command</h4>
                                     <br/>
-                                    <div className='card'>
-                                        <div className='card-body'>
-                                            <div className='form-inline'>
-                                                <div className='form-group'>
-                                                    <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='Command: (Copy)' value={this.state.cmd} onChange={this.onChangeCmd} />
-                                                </div>
-                                                <div className="form-group">
-                                                    <input type="text" className="form-control ml-2 mb-2 mr-sm-2" placeholder='Command Modifier: (I)' value={this.state.mod} onChange={this.onChangemod} />
-                                                </div>
-                                            </div>
+                                    <div className='row'>
+                                        <div className='form-group col-2 padding-1'>
+                                            <input required className="form-control input-group-sm" type="text" placeholder='Cmd' value={this.state.cmd} onChange={this.onChangeCmd}/>
+                                        </div>
+                                        <div className='form-group col-1 padding-0'>
+                                            <input type="text" className="form-control input-group-sm" value={this.state.mod} onChange={this.onChangemod} />
+                                        </div>
+                                        <div className='form-group col-1 padding-0'></div>
+                                        <div className='form-group col-1 padding-0'>
+                                            <input type="text" className="form-control input-group-sm" value={this.state.a_am} onChange={this.onChangea_am} />
+                                        </div>
+                                        <div className='form-group col-1 padding-0'>
+                                            <input type="text" required className="form-control input-group-sm" placeholder='A' value={this.state.a} onChange={this.onChangea} />
+                                        </div>
+                                        <div className='form-group col-1 padding-0'></div>
+                                        <div className='form-group col-1 padding-0'>
+                                            <input type="text" className="form-control input-group-sm" value={this.state.b_am} onChange={this.onChangeb_am} />
+                                        </div>
+                                        <div className='form-group col-1 padding-0'>
+                                            <input type="text" required className="form-control input-group-sm" placeholder='B' value={this.state.b} onChange={this.onChangeb} />
                                         </div>
                                     </div>
-                                    <div className='card mt-2'>
-                                        <div className='card-body'>
-                                            <div className='form-inline'>
-                                                <div className="form-group">
-                                                    <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='A Modifier: ($)' value={this.state.a_am} onChange={this.onChangea_am} />
-                                                </div>
-                                                <div className="form-group">
-                                                    <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='A: (0)' value={this.state.a} onChange={this.onChangea} />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className='card mt-2'>
-                                        <div className='card-body'>
-                                            <div className='form-inline'>
-                                                <div className="form-group">
-                                                    <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='B Modifier: ($)' value={this.state.b_am} onChange={this.onChangeb_am} />
-                                                </div>
-                                                <div className="form-group">
-                                                    <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='B: (1)' value={this.state.b} onChange={this.onChangeb} />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+
+
+                                    {/*<div className='card'>*/}
+                                    {/*    <div className='card-body'>*/}
+                                    {/*        <div className='form-inline'>*/}
+                                    {/*            <div className='form-group'>*/}
+                                    {/*                <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='Command: (Copy)' value={this.state.cmd} onChange={this.onChangeCmd} />*/}
+                                    {/*            </div>*/}
+                                    {/*            <div className="form-group">*/}
+                                    {/*                <input type="text" className="form-control ml-2 mb-2 mr-sm-2" placeholder='Command Modifier: (I)' value={this.state.mod} onChange={this.onChangemod} />*/}
+                                    {/*            </div>*/}
+                                    {/*        </div>*/}
+                                    {/*    </div>*/}
+                                    {/*</div>*/}
+                                    {/*<div className='card mt-2'>*/}
+                                    {/*    <div className='card-body'>*/}
+                                    {/*        <div className='form-inline'>*/}
+                                    {/*            <div className="form-group">*/}
+                                    {/*                <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='A Modifier: ($)' value={this.state.a_am} onChange={this.onChangea_am} />*/}
+                                    {/*            </div>*/}
+                                    {/*            <div className="form-group">*/}
+                                    {/*                <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='A: (0)' value={this.state.a} onChange={this.onChangea} />*/}
+                                    {/*            </div>*/}
+                                    {/*        </div>*/}
+                                    {/*    </div>*/}
+                                    {/*</div>*/}
+                                    {/*<div className='card mt-2'>*/}
+                                    {/*    <div className='card-body'>*/}
+                                    {/*        <div className='form-inline'>*/}
+                                    {/*            <div className="form-group">*/}
+                                    {/*                <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='B Modifier: ($)' value={this.state.b_am} onChange={this.onChangeb_am} />*/}
+                                    {/*            </div>*/}
+                                    {/*            <div className="form-group">*/}
+                                    {/*                <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='B: (1)' value={this.state.b} onChange={this.onChangeb} />*/}
+                                    {/*            </div>*/}
+                                    {/*        </div>*/}
+                                    {/*    </div>*/}
+                                    {/*</div>*/}
                                     <button type="submit" className="btn btn-outline-success float-right mt-2 ">✔️</button>
                                 </form>
                             </div>
@@ -293,31 +318,66 @@ export default class NewWarriorComponent extends Component {
                         <br />
                         <br />
                         <div className='card shadow rounded'>
-                            <div className='card body'>
+                            <div className='card-body'>
                                 <h5 className='card-title ml-2 mt-2'>Command Options</h5>
-                                <p className='card-text'>
+                                <div className='card-text'>
                                     <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Copy</button>
                                     <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Blank</button>
+                                </div>
+                                <div className='card-text'>
                                     <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Add</button>
                                     <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Subtract</button>
                                     <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Multiply</button>
                                     <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Divide</button>
                                     <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Modulus</button>
+                                </div>
+                                <div className='card-text'>
                                     <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Jump</button>
                                     <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>JumpZ</button>
                                     <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>JumpNZ</button>
                                     <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>DecJumpNZ</button>
+                                </div>
+                                <div className='card-text'>
                                     <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Split</button>
                                     <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>SkipE</button>
                                     <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>SkipNE</button>
                                     <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>SkipL</button>
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div className='col-md-6'>
                         {/*<h3></h3>*/}
                         <PlayComponent warriorList={this.state.warriors} p2code={this.state.commandList}/>
+                    </div>
+                </div>
+                <div className='row'>
+                    <div className='col-9'>
+                        <br />
+                        {/*<div className='card shadow rounded'>*/}
+                        {/*    <div className='card-body'>*/}
+                        {/*        <h5 className='card-title ml-2 mt-2'>Command Options</h5>*/}
+                        {/*        <div className='card-text'>*/}
+                        {/*            <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Copy</button>*/}
+                        {/*            <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Blank</button>*/}
+                        {/*            <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Add</button>*/}
+                        {/*            <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Subtract</button>*/}
+                        {/*            <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Multiply</button>*/}
+                        {/*            <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Divide</button>*/}
+                        {/*            <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Modulus</button>*/}
+                        {/*        </div>*/}
+                        {/*        <div className='card-text'>*/}
+                        {/*            <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Jump</button>*/}
+                        {/*            <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>JumpZ</button>*/}
+                        {/*            <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>JumpNZ</button>*/}
+                        {/*            <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>DecJumpNZ</button>*/}
+                        {/*            <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Split</button>*/}
+                        {/*            <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>SkipE</button>*/}
+                        {/*            <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>SkipNE</button>*/}
+                        {/*            <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>SkipL</button>*/}
+                        {/*        </div>*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
                     </div>
                 </div>
             </div>

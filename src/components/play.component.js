@@ -275,7 +275,7 @@ export default class Play extends Component {
                     <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEnd.bind(this)}>❌</button>
                     {/*test dropdown*/}
                     <div className="btn-group dropright">
-                        <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                        <button className="btn btn-secondary dropdown-toggle ml-2 mb-2 mr-sm-2" type="button" id="dropdownMenuButton"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onChange={this.onChangePlayer1Code}>
                             Select Opponent ⚔️
                         </button>

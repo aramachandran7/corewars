@@ -8,3 +8,18 @@
     box-sizing: border-box;
     border: 5px solid white
 }
+
+
+.container {
+    width: 100%;
+    white-space: nowrap;
+}
+
+.padding-0{
+    padding-right:0;
+    padding-left:0;
+}
+
+.padding-1{
+    padding-right:0;
+}
