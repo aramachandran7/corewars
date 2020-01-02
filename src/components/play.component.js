@@ -302,11 +302,11 @@ export default class Play extends Component {
                                 player_id = {cell.player_id}
                                 index = {cell.index}
                                 key = {cell.index}
-                                style={{onMouseEnter:this.onMouseToggle,
-                                        onMouseLeave:this.onMouseToggle,
-                                    }}
+                                // style={{onMouseEnter:this.onMouseToggle,
+                                //         onMouseLeave:this.onMouseToggle,
+                                //     }}
 
-                                // onHover = {this.onChangeHover}
+                                onHover = {this.onChangeHover}
                                 // onUnHover = {this.onResetHover}
                             />
                         ))}

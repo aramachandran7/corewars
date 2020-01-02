@@ -42,9 +42,9 @@ export default class Cell extends PureComponent {
                 break
             // }
         }
-        // const onMouseHover = () =>{
-        //     this.props.onHover(index)
-        // }
+        const onMouseHover = ()=>{
+            this.props.onHover(index)
+        }
         //
         // const onMouseUnHover = () => {
         //     this.props.onUnHover()
@@ -62,9 +62,9 @@ export default class Cell extends PureComponent {
                 width: `${CELL_SIZE}px`,
                 height: `${CELL_SIZE}px`,
                 backgroundColor: `${bg_color}`,
-                // onMouseEnter: {onMouseToggle},
                 // onMouseLeave: {onMouseToggle},
             }}
+            onMouseEnter = {() => onMouseHover()}
             />
         )
     }
