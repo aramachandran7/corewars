@@ -72,7 +72,6 @@ export default class NewWarriorComponent extends Component {
         this.state = {
             name: '',
             commandList: [],
-            dateCreated: new Date(),
             warriors:[],
             //command specific
             cmd:'',
@@ -161,13 +160,12 @@ export default class NewWarriorComponent extends Component {
         e.preventDefault()
         const Warrior = {
             name: this.state.name,
-            dateCreated: this.state.dateCreated,
-            List: this.state.commandList,
+            commandList: this.state.commandList,
         }
         console.log(Warrior)
         axios.post('http://localhost:3000/play/new/', Warrior)
             .then(res=> console.log(res.data))
-        window.location = '/'
+        window.location = '/play/'
     }
 
     //dummy function
@@ -210,6 +208,8 @@ export default class NewWarriorComponent extends Component {
         }
         console.log('new command list.')
         console.log(newCommandList)
+
+        //reseting
         this.setState({
             commandList: newCommandList,
             cmd:'',

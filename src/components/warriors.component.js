@@ -17,9 +17,8 @@ const Warrior = (props) => {
 
 export default class WarriorsComponent extends Component {
 
-    constructor(props){
-        super(props)
-
+    constructor(){
+        super()
         this.state = {
             warriors:[]
         }
@@ -28,15 +27,12 @@ export default class WarriorsComponent extends Component {
 
     componentDidMount() {
         // what we are doing here: getting pre-existing user information via axios,
+        console.log(this.state.warriors)
         axios.get('http://localhost:3000/play/')
-            .then( (response) => {
-                if (response.data.length >0){
-                    this.setState({
-                        warriors: response.data
-                    })
-                }
+            .then((response) => {this.setState({warriors: response.data})
             })
             .catch(err=>console.log(err))
+        console.log(this.state.warriors);
     }
 
     // add in deleting warriors if desirable

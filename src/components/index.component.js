@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 
+
+
+const options = ['one', 'two', 'three']
+
 export default function IndexComponent(){
         return(
             <div className="container">
@@ -21,7 +25,8 @@ export default function IndexComponent(){
                         <br />
                         <br />
                         <br />
-                        <p>Built with ❤️ by Adi & Eamon.</p>
+
+                        <p className='fixed-bottom text-center text-secondary' >Built with ❤️ by Adi & Eamon.</p>
                     </div>
                 </div>
             </div>

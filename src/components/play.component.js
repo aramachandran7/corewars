@@ -7,8 +7,8 @@ import { Command, Add, Dat, Div, Djn, Jmn,
     Jmp, Jmz, Mod, Mov, Mul, Seq,
     Slt, Sne, Spl, Sub } from  './corewars/instructions'
 import 'bootstrap/dist/js/bootstrap.bundle';
-
-
+import Dropdown from 'react-dropdown'
+import 'react-dropdown/style.css'
 
 
 const HEIGHT = 600
@@ -54,6 +54,7 @@ export default class Play extends Component {
         //     new Mov(2, 2, "$", "@", "I", memory_size),
         //     new Jmp(-2, 0,'$', '$', '', memory_size),
         //     new Dat(0, 0, '$', '$', '', memory_size)]
+
         var player2_code = props.p2code
 
         var players = this.make_players(memory, [player1_code, player2_code])
@@ -100,7 +101,8 @@ export default class Play extends Component {
 
         this.setState({
             raw_code:newPlayers,
-            players: this.make_players(this.state.memory, newPlayers)
+            players: this.make_players(this.state.memory, newPlayers),
+            player1code: e.target.value
         })
     }
 
@@ -261,7 +263,7 @@ export default class Play extends Component {
             current_step: 1,
             current_player: 0,
             in_game: false,
-            warrior: nextProps.warriors,
+            warriors: nextProps.warriors,
             hoverInfo: ''
         })
     }
@@ -273,17 +275,22 @@ export default class Play extends Component {
                     <button className="btn btn-outline-success mb-2 mr-sm-2" onClick={this.start.bind(this)}>🏃‍</button>
                     <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEndThink.bind(this)}>🤔 ❌</button>
                     <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEnd.bind(this)}>❌</button>
-                    {/*test dropdown*/}
-                    <div className="btn-group dropright">
-                        <button className="btn btn-secondary dropdown-toggle ml-2 mb-2 mr-sm-2" type="button" id="dropdownMenuButton"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onChange={this.onChangePlayer1Code}>
-                            Select Opponent ⚔️
-                        </button>
-                        <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            {this.warriorListFunc()}
-                        </div>
-                    </div>
+                    {/*<div className="btn-group dropright">*/}
+                    {/*    <button className="btn btn-secondary dropdown-toggle ml-2 mb-2 mr-sm-2" type="button" id="dropdownMenuButton"*/}
+                    {/*            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onChange={this.onChangePlayer1Code}>*/}
+                    {/*        Select Opponent ⚔️*/}
+                    {/*    </button>*/}
+                    {/*    <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">*/}
+                    {/*        {this.warriorListFunc()}*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
                 </div>
+
+                <div className='col-6'>
+                    <Dropdown options={this.state.warriors} onChange={this.onChangePlayer1Code}  placeholder='Select Opponent ⚔️' />
+                </div>
+
+                {/*this breask: value={this.state.player1Code}*/}
                 <div className='row'>
                     <div className="card shadow rounded">
                         <div className="card-body">

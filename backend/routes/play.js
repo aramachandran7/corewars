@@ -1,33 +1,29 @@
 // the most important thing is playing like a fucking king
 const express = require('express');
 const router = express.Router();
-
-// middleware imports
-// let secured = require('../middleware/secured')
-
-//class imports
-// let User = require('../models/user.model')
-// let Warrior = require('../models/Warrior.model')
 let Warrior = require('../models/Warrior.model');
+let cors = require('cors')
 
 //Below are the get requests for the entire play setup (all the same minus the starting URL's
-router.get('/', (req, res, next)=>{
+router.route('/').get(cors(), (req, res, next)=>{
     Warrior.find()
         .then(warriors => res.json(warriors))
         .catch(err => res.status(400).json('Error: ' + err))
 });
 
-router.get('/new/', (req, res, next)=>{
+router.route('/new/').get(cors(),(req, res, next)=>{
     Warrior.find()
         .then(warriors => res.json(warriors))
         .catch(err => res.status(400).json('Error: ' + err))
 });
 
-router.post('/new/', (req, res, next)=>{
-    const commandList = req.body.commandList;
-    const name = req.body.name;
-    const date = Date.parse(req.body.date)
-    const newWarrior = new Warrior(name, date, commandList)
+
+
+router.route('/new/').post(cors(),(req, res, next)=>{
+    const newCommandList = req.body.commandList;
+    const newName = req.body.name;
+    const newDate = new Date()
+    const newWarrior = new Warrior({name: newName, dateCreated: newDate, commandList: newCommandList})
     newWarrior.save()
         .then(()=>res.json('Warrior Added'))
         .catch(err=>res.status(400).json('Error'+err))
@@ -36,7 +32,7 @@ router.post('/new/', (req, res, next)=>{
 // play routing to edit warriors (todo later)
 // router.post('')
 
-
+module.exports = router
 
 // OLD Corewars codebase:
 
@@ -119,4 +115,3 @@ router.post('/new/', (req, res, next)=>{
 //         .err((err)=> res.status(400).json('Error: ' + err))
 // })
 //
-// module.exports = router
