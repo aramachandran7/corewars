@@ -56,7 +56,7 @@ export default class Cell extends PureComponent {
         // }
 
         return (
-            <div className="Cell" style={{
+            <div className="Cell padding-0" style={{
                 left: `${CELL_SIZE * x + X_OFFSET}px`,
                 top: `${CELL_SIZE * y + Y_OFFSET}px`,
                 width: `${CELL_SIZE}px`,

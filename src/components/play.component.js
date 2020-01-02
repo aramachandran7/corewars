@@ -27,9 +27,12 @@ const Warrior = (props) => {
 const RenderHoverInfo = (props) => {
     return(
         <div>
-            <p className="card-text"> <b>Command: {props.hoverProp.name}</b> a_am: <b>{props.hoverProp.a_am}</b> |
-            a: <b>{props.hoverProp.a}</b> | b_am: <b>{props.hoverProp.b_am}</b> |
-            b: <b>{props.hoverProp.b}</b> | mod: <b>{props.hoverProp.mod}</b></p>
+            <h5>
+                Cell Info👉{props.hoverProp.name}.{props.hoverProp.mod}    (  {props.hoverProp.a_am}  {props.hoverProp.a}  ,  {props.hoverProp.b_am}  {props.hoverProp.b}  )
+            </h5>
+            {/*<p className="card-text"> <b>Command: {props.hoverProp.name}</b> a_am: <b>{props.hoverProp.a_am}</b> |*/}
+            {/*a: <b>{props.hoverProp.a}</b> | b_am: <b>{props.hoverProp.b_am}</b> |*/}
+            {/*b: <b>{props.hoverProp.b}</b> | mod: <b>{props.hoverProp.mod}</b></p>*/}
             {/*<p>index: {props.hoverProp}</p>*/}
         </div>
 
@@ -271,10 +274,18 @@ export default class Play extends Component {
     render(){
         return(
             <div className="container">
-                <div className='row'>
+                <div className='col-6 mb-2'>
+                    <Dropdown options={this.state.warriors} onChange={this.onChangePlayer1Code}  placeholder='Select Opponent ⚔️' />
+                </div>
+                <div className='row mt-2'>
                     <button className="btn btn-outline-success mb-2 mr-sm-2" onClick={this.start.bind(this)}>🏃‍</button>
                     <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEndThink.bind(this)}>🤔 ❌</button>
                     <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEnd.bind(this)}>❌</button>
+                    <div className="card shadow rounded ml-2">
+                        <div className="card-body">
+                            <RenderHoverInfo hoverProp={this.state.hoverInfo}/>
+                        </div>
+                    </div>
                     {/*<div className="btn-group dropright">*/}
                     {/*    <button className="btn btn-secondary dropdown-toggle ml-2 mb-2 mr-sm-2" type="button" id="dropdownMenuButton"*/}
                     {/*            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onChange={this.onChangePlayer1Code}>*/}
@@ -285,22 +296,8 @@ export default class Play extends Component {
                     {/*    </div>*/}
                     {/*</div>*/}
                 </div>
-
-                <div className='col-6'>
-                    <Dropdown options={this.state.warriors} onChange={this.onChangePlayer1Code}  placeholder='Select Opponent ⚔️' />
-                </div>
-
-                {/*this breask: value={this.state.player1Code}*/}
-                <div className='row'>
-                    <div className="card shadow rounded">
-                        <div className="card-body">
-                            <h4 className='card-title'>Hover'd Info</h4>
-                            <RenderHoverInfo hoverProp={this.state.hoverInfo}/>
-                        </div>
-                    </div>
-                </div>
                 <br />
-                <div className='row float-left' >
+                <div className='col-12 padding-0'>
                     <div className="Board" style={{height: HEIGHT, width: WIDTH}}>
                         {this.state.memory.map(cell => (
                             <Cell
@@ -318,7 +315,7 @@ export default class Play extends Component {
                             />
                         ))}
                     </div>
-                </div>
+                 </div>
 
             </div>
         )

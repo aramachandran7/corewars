@@ -19,14 +19,13 @@ export default function IndexComponent(){
                         <p>We're still in a super early dev stage, and are super open to feedback, comments, and concerns. Thanks for your patience & support!</p>
                         <br />
                         <Link to="/play/">
-                            <button type="button" className="btn btn-outline-success mb-2 mr-sm-2">Play ➡️</button>
+                            <button type="button" className="btn btn-outline-success mb-2 mr-sm-2">Leaderboard  📈  </button>
                         </Link>
                         <a href='../downloads/hype.txt' download><button type="button" className="btn btn-outline-success ml-2 mb-2 mr-sm-2">Instructions ⬇️</button></a>
                         <br />
                         <br />
                         <br />
 
-                        <p className='fixed-bottom text-center text-secondary' >Built with ❤️ by Adi & Eamon.</p>
                     </div>
                 </div>
             </div>

@@ -24,12 +24,12 @@ const displayChosenInstructions = (commandList, onDeleteCommand) => {
                     <div className="card">
                         <div className="card-body">
                             <h4>
-                                {instruction.values().name}
+                                {instruction.values().name}.{instruction.values().mod}    (  {instruction.values().a_am}  {instruction.values().a}  ,  {instruction.values().b_am}  {instruction.values().b}  )
                                 <button type="button" onClick={() => {onDeleteCommand(index)}} className="btn btn-outline-danger float-right">🗑️</button>
                             </h4>
-                            <p className="card-text">a_am: <b>{instruction.values().a_am}</b> |
-                                a: <b>{instruction.values().a}</b> | b_am: <b>{instruction.values().b_am}</b> |
-                                b: <b>{instruction.values().b}</b> | mod: <b>{instruction.values().mod}</b></p>
+                            {/*<p className="card-text">a_am: <b></b> |*/}
+                            {/*    a: <b></b> | b_am: <b>{instruction.values().b_am}</b> |*/}
+                            {/*    b: <b>{instruction.values().b}</b> | mod: <b></b></p>*/}
                             {/*add in buttons to delete, new delete function, how do you execute commands? */}
                             {/*add in / edit?? */}
                         </div>
@@ -39,12 +39,6 @@ const displayChosenInstructions = (commandList, onDeleteCommand) => {
         )
     }
 }
-
-// const CmdInput = () => {
-//     return(
-//
-//     )
-// }
 
 export default class NewWarriorComponent extends Component {
 
@@ -141,17 +135,17 @@ export default class NewWarriorComponent extends Component {
         // (with e, i guess) to specify which item on the list will be delted?
         // currently it will just delete the last one.
         let newCommandList = this.state.commandList.map(x => (Object.assign(Object.create( Object.getPrototypeOf(x)), x)))
-        console.log("Old") 
-        console.log(newCommandList) 
-        console.log("Index: " + index)
+        // console.log("Old")
+        // console.log(newCommandList)
+        // console.log("Index: " + index)
         // test:
         // newCommandList = newCommandList.pop()
         newCommandList.splice(index, 1)
 
         // const len = newCommandList.length
         // newCommandList = newCommandList.splice(len-1, 1)
-        console.log("New")
-        console.log(newCommandList)
+        // console.log("New")
+        // console.log(newCommandList)
         this.setState({
             commandList: newCommandList,
         })
@@ -175,11 +169,15 @@ export default class NewWarriorComponent extends Component {
 
     onSubmit(e){
         e.preventDefault()
-        var newCommandList = this.state.commandList.map(x => (Object.assign(Object.create( Object.getPrototypeOf(x)), x)))
-        // accounting for default properites
 
-        if (this.state.a_am === '') {this.setState({a_am: '$'})}
-        if (this.state.b_am === '') {this.setState({b_am: '$'})}
+        var newCommandList = this.state.commandList.map(x => (Object.assign(Object.create( Object.getPrototypeOf(x)), x)))
+
+        /* accounting for default properties - doesn't work :( */
+        // console.log('states a_am prior to edit'+this.state.a_am)
+        // // if (this.state.a_am == '') {this.setState({a_am: '$'})}
+        // // if (this.state.b_am == '') {this.setState({b_am: '$'})}
+        // console.log('states a_am post edit'+this.state.a_am)
+
 
         // if (this.state.cmd === 'Jump' || this.state.cmd === 'Split'){this.setState({mod:''})}
         // if (this.state.mod=== '' && (this.state.cmd==='Add' || this.state.cmd==='Subtract'||this.state.cmd==='Divide'||this.state.cmd==='Multiply'||this.state.cmd==='Modulus')){this.setState({mod:'AB'})}
@@ -206,8 +204,8 @@ export default class NewWarriorComponent extends Component {
             case 'SkipE': newCommandList.push(new Seq(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
             default: console.log('Command : ' + this.state.cmd + ' not recognized.');
         }
-        console.log('new command list.')
-        console.log(newCommandList)
+        // console.log('new command list.')
+        // console.log(newCommandList)
 
         //reseting
         this.setState({

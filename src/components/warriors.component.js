@@ -66,7 +66,7 @@ export default class WarriorsComponent extends Component {
                 <div className="row">
                     <div className="col-6">
 
-                        <h3>Warrior (+ 1)</h3>
+                        <h3>Build your Warrior!</h3>
                         <Link to="/play/new/">
                             <button type="button" className="btn btn-outline-success">+1</button>
                         </Link>

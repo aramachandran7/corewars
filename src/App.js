@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // importing components
 import Navbar from "./components/navbar.component";
+import Footer from './components/footer.component'
 import indexComponent from "./components/index.component"
 import WarriorsComponent from "./components/warriors.component"
 import NewWarriorComponent from './components/newwarrior.component'
@@ -13,17 +14,17 @@ import NewWarriorComponent from './components/newwarrior.component'
 
 function App() {
   return (
-      <Router>
-        <div className='container' >
-          <Navbar />
-          {/* Routing Setup*/}
-          <Route exact path="/" component={indexComponent} />
-          <Route exact path="/play" component={WarriorsComponent} />
-          <Route path="/play/new" component={NewWarriorComponent} />
-            {/*<Route path="/play/edit" component={playEditComponent} />*/}
-        </div>
-      </Router>
-
+        <Router>
+            <div className='container' >
+                <Navbar />
+                {/* Routing Setup*/}
+                <Route exact path="/" component={indexComponent} />
+                <Route exact path="/play" component={WarriorsComponent} />
+                <Route path="/play/new" component={NewWarriorComponent} />
+                {/*<Route path="/play/edit" component={playEditComponent} />*/}
+                <Footer />
+            </div>
+        </Router>
   );
 }
 
