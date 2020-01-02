@@ -183,6 +183,13 @@ export default class NewWarriorComponent extends Component {
         if (this.state.a_am === '') {this.setState({a_am: '$'})}
         if (this.state.b_am === '') {this.setState({b_am: '$'})}
 
+        // if (this.state.cmd === 'Jump' || this.state.cmd === 'Split'){this.setState({mod:''})}
+        // if (this.state.mod=== '' && (this.state.cmd==='Add' || this.state.cmd==='Subtract'||this.state.cmd==='Divide'||this.state.cmd==='Multiply'||this.state.cmd==='Modulus')){this.setState({mod:'AB'})}
+        // if (this.state.mod=== '' && (this.state.cmd==='Dat')){this.setState({})}
+        // if (this.state.mod=== '' && (this.state.cmd===)){}
+        // if (this.state.mod=== '' && (this.state.cmd===)){}
+        // if (this.state.mod=== '' && (this.state.cmd===)){}
+
         switch (this.state.cmd){
             case 'Copy': newCommandList.push(new Mov(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
             case 'Add': newCommandList.push(new Add(this.state.a, this.state.b, this.state.a_am, this.state.b_am, this.state.mod, memory_size)); break;
