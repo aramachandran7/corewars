@@ -429,8 +429,9 @@ export default class NewWarriorComponent extends Component {
                 <div className='row'>
                     <div className='col-md-6'>
                         <form onSubmit={this.onSubmitName} className='form-inline'>
-                            <label> Warrior Name 🍭 : </label>
-                            <input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='New Warrior' value={this.state.name} onChange={this.onChangeName} />
+                            {/*<label> Warrior Name 🍭 : </label>*/}
+                            <TextField className='form-control ml-2 mb-2 mr-sm-2' size='small' variant="outlined" label='Name Your Warrior 🍭 ' value={this.state.name} onChange={this.onChangeName} />
+                            {/*<input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='New Warrior' value={this.state.name} onChange={this.onChangeName} />*/}
                             <button type="submit" className="btn btn-outline-success float-right mb-2 mr-sm-2">✔️</button>
                         </form>
 

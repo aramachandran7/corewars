@@ -50,38 +50,38 @@ export default class Cell extends PureComponent {
 
 
 
-        if (index == this.props.indexA){
-            return (
-                <div className="CellA padding-0"
-                     onMouseEnter = {() => onMouseHover()}
-                    // onMouseLeave={() => onMouseUnHover()}
-                     style={{
-                         left: `${CELL_SIZE * x + X_OFFSET}px`,
-                         top: `${CELL_SIZE * y + Y_OFFSET}px`,
-                         width: `${CELL_SIZE}px`,
-                         height: `${CELL_SIZE}px`,
-                         backgroundColor: `${bg_color}`,
-                     }}
-                />
-            )
-        }
-        else if (index == this.props.indexB){
-            return(
-                <div className="CellB padding-0"
-                     onMouseEnter = {() => onMouseHover()}
-                    // onMouseLeave={() => onMouseUnHover()}
-                     style={{
-                         left: `${CELL_SIZE * x + X_OFFSET}px`,
-                         top: `${CELL_SIZE * y + Y_OFFSET}px`,
-                         width: `${CELL_SIZE}px`,
-                         height: `${CELL_SIZE}px`,
-                         backgroundColor: `${bg_color}`,
-                     }}
-                />
-            )
-
-        }
-        else {
+        // if (index == this.props.indexA){
+        //     return (
+        //         <div className="CellA padding-0"
+        //              onMouseEnter = {() => onMouseHover()}
+        //             // onMouseLeave={() => onMouseUnHover()}
+        //              style={{
+        //                  left: `${CELL_SIZE * x + X_OFFSET}px`,
+        //                  top: `${CELL_SIZE * y + Y_OFFSET}px`,
+        //                  width: `${CELL_SIZE}px`,
+        //                  height: `${CELL_SIZE}px`,
+        //                  backgroundColor: `${bg_color}`,
+        //              }}
+        //         />
+        //     )
+        // }
+        // else if (index == this.props.indexB){
+        //     return(
+        //         <div className="CellB padding-0"
+        //              onMouseEnter = {() => onMouseHover()}
+        //             // onMouseLeave={() => onMouseUnHover()}
+        //              style={{
+        //                  left: `${CELL_SIZE * x + X_OFFSET}px`,
+        //                  top: `${CELL_SIZE * y + Y_OFFSET}px`,
+        //                  width: `${CELL_SIZE}px`,
+        //                  height: `${CELL_SIZE}px`,
+        //                  backgroundColor: `${bg_color}`,
+        //              }}
+        //         />
+        //     )
+        //
+        // }
+        // else {
             return (
                 <div className="Cell padding-0"
                      onMouseEnter = {() => onMouseHover()}
@@ -95,7 +95,7 @@ export default class Cell extends PureComponent {
                      }}
                 />
             )
-        }
+        // }
 
     }
 }
