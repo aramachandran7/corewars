@@ -9,6 +9,23 @@
     border: 5px solid white
 }
 
+.Cell:hover{
+    border: 3px solid #433F47
+}
+
+.CellA{
+    background: #ccc;
+    position: absolute;
+    box-sizing: border-box;
+    border: 3px solid #873AD4
+}
+
+.CellB{
+    background: #ccc;
+    position: absolute;
+    box-sizing: border-box;
+    border: 3px solid #E3FF19
+}
 
 .container {
     width: 100%;

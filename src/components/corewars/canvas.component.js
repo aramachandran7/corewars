@@ -24,12 +24,8 @@ export default class Cell extends PureComponent {
         const x = Math.floor(index / ROWS)
         const y = index % ROWS
         let bg_color
-        // var hovered = false;
 
-        // if (hovered){
-        //     bg_color="#3C393F"
-        // }
-        // else {
+
         switch (player_id) {
             case 0:
                 bg_color = "red"
@@ -40,32 +36,66 @@ export default class Cell extends PureComponent {
             default:
                 bg_color = "#eeeeee"
                 break
-            // }
         }
         const onMouseHover = ()=>{
             this.props.onHover(index)
+            console.log('indexA: ' + this.props.indexA)
+            console.log('indexB: ' + this.props.indexB)
+            console.log('index: ' + index)
         }
-        //
+
         // const onMouseUnHover = () => {
-        //     this.props.onUnHover()
+        //     hovered=false
         // }
 
-        // const onMouseToggle = () => {
-        //     console.log('mousetoggled')
-        //     hovered = !hovered;
-        // }
 
-        return (
-            <div className="Cell padding-0" style={{
-                left: `${CELL_SIZE * x + X_OFFSET}px`,
-                top: `${CELL_SIZE * y + Y_OFFSET}px`,
-                width: `${CELL_SIZE}px`,
-                height: `${CELL_SIZE}px`,
-                backgroundColor: `${bg_color}`,
-                // onMouseLeave: {onMouseToggle},
-            }}
-            onMouseEnter = {() => onMouseHover()}
-            />
-        )
+
+        if (index == this.props.indexA){
+            return (
+                <div className="CellA padding-0"
+                     onMouseEnter = {() => onMouseHover()}
+                    // onMouseLeave={() => onMouseUnHover()}
+                     style={{
+                         left: `${CELL_SIZE * x + X_OFFSET}px`,
+                         top: `${CELL_SIZE * y + Y_OFFSET}px`,
+                         width: `${CELL_SIZE}px`,
+                         height: `${CELL_SIZE}px`,
+                         backgroundColor: `${bg_color}`,
+                     }}
+                />
+            )
+        }
+        else if (index == this.props.indexB){
+            return(
+                <div className="CellB padding-0"
+                     onMouseEnter = {() => onMouseHover()}
+                    // onMouseLeave={() => onMouseUnHover()}
+                     style={{
+                         left: `${CELL_SIZE * x + X_OFFSET}px`,
+                         top: `${CELL_SIZE * y + Y_OFFSET}px`,
+                         width: `${CELL_SIZE}px`,
+                         height: `${CELL_SIZE}px`,
+                         backgroundColor: `${bg_color}`,
+                     }}
+                />
+            )
+
+        }
+        else {
+            return (
+                <div className="Cell padding-0"
+                     onMouseEnter = {() => onMouseHover()}
+                    // onMouseLeave={() => onMouseUnHover()}
+                     style={{
+                         left: `${CELL_SIZE * x + X_OFFSET}px`,
+                         top: `${CELL_SIZE * y + Y_OFFSET}px`,
+                         width: `${CELL_SIZE}px`,
+                         height: `${CELL_SIZE}px`,
+                         backgroundColor: `${bg_color}`,
+                     }}
+                />
+            )
+        }
+
     }
 }

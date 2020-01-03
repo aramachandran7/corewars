@@ -1,10 +1,7 @@
-import React, {PureComponent} from 'react'
+import React from 'react'
 
-
-export default class FooterComponent extends PureComponent {
-    render(){
+export default function FooterComponent() {
         return(
             <p className='align-bottom text-center text-secondary' >Built with ❤️ by Adi & Eamon.</p>
         )
-    }
 }

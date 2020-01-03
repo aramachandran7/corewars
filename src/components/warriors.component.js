@@ -68,7 +68,7 @@ export default class WarriorsComponent extends Component {
 
                         <h3>Build your Warrior!</h3>
                         <Link to="/play/new/">
-                            <button type="button" className="btn btn-outline-success">+1</button>
+                            <button type="button" className="btn btn-outline-success">Create a Warrior!</button>
                         </Link>
                     </div>
                 </div>

@@ -25,18 +25,34 @@ const Warrior = (props) => {
 }
 
 const RenderHoverInfo = (props) => {
-    return(
-        <div>
-            <h5>
-                Cell Info👉{props.hoverProp.name}.{props.hoverProp.mod}    (  {props.hoverProp.a_am}  {props.hoverProp.a}  ,  {props.hoverProp.b_am}  {props.hoverProp.b}  )
-            </h5>
-            {/*<p className="card-text"> <b>Command: {props.hoverProp.name}</b> a_am: <b>{props.hoverProp.a_am}</b> |*/}
-            {/*a: <b>{props.hoverProp.a}</b> | b_am: <b>{props.hoverProp.b_am}</b> |*/}
-            {/*b: <b>{props.hoverProp.b}</b> | mod: <b>{props.hoverProp.mod}</b></p>*/}
-            {/*<p>index: {props.hoverProp}</p>*/}
-        </div>
+    if (props.easyModeProp){
+        return(
+            <div>
+                <h5>
+                    Cell Info👉{props.hoverProp.name}  (  {props.hoverProp.a}  ,  {props.hoverProp.b}  )
+                </h5>
+                {/*<p className="card-text"> <b>Command: {props.hoverProp.name}</b> a_am: <b>{props.hoverProp.a_am}</b> |*/}
+                {/*a: <b>{props.hoverProp.a}</b> | b_am: <b>{props.hoverProp.b_am}</b> |*/}
+                {/*b: <b>{props.hoverProp.b}</b> | mod: <b>{props.hoverProp.mod}</b></p>*/}
+                {/*<p>index: {props.hoverProp}</p>*/}
+            </div>
 
-    )
+        )
+    }
+    else{
+        return(
+            <div>
+                <h5>
+                    Cell Info👉{props.hoverProp.name}.{props.hoverProp.mod}    (  {props.hoverProp.a_am}  {props.hoverProp.a}  ,  {props.hoverProp.b_am}  {props.hoverProp.b}  )
+                </h5>
+                {/*<p className="card-text"> <b>Command: {props.hoverProp.name}</b> a_am: <b>{props.hoverProp.a_am}</b> |*/}
+                {/*a: <b>{props.hoverProp.a}</b> | b_am: <b>{props.hoverProp.b_am}</b> |*/}
+                {/*b: <b>{props.hoverProp.b}</b> | mod: <b>{props.hoverProp.mod}</b></p>*/}
+                {/*<p>index: {props.hoverProp}</p>*/}
+            </div>
+        )
+    }
+
 }
 export default class Play extends Component {
     constructor(props) {
@@ -47,8 +63,8 @@ export default class Play extends Component {
 
         this.onChangePlayer1Code = this.onChangePlayer1Code.bind(this)
         this.onChangeHover = this.onChangeHover.bind(this)
-        this.onResetHover = this.onResetHover.bind(this)
         this.onMouseToggle = this.onMouseToggle.bind(this)
+        this.displayButtons = this.displayButtons.bind(this)
 
         var player1_code = [new Mov(0, 1, "$", "$", "I", memory_size)] // array of commands
         // var player1_code = props.p1code;
@@ -76,6 +92,9 @@ export default class Play extends Component {
             in_game: false,
             warriors: props.warriorList,
             hoverInfo: {},
+            hoverIndex: null,
+            easyMode: props.easyModeBool,
+            debugMode: props.debugModeBool
         }
     }
 
@@ -83,14 +102,8 @@ export default class Play extends Component {
         const instructionValues = this.state.memory[memIndex].values()
 
         this.setState({
-            hoverInfo: instructionValues
-            // hoverInfo: memIndex
-        })
-    }
-
-    onResetHover(){
-        this.setState({
-            hoverInfo: null,
+            hoverInfo: instructionValues,
+            hoverIndex: memIndex
         })
     }
 
@@ -211,6 +224,16 @@ export default class Play extends Component {
             this.setState({in_game: true}, () => {this.forward()})}
     }
 
+    startOne(){
+        var players = this.make_players(this.state.memory, this.state.raw_code)
+        this.setState({
+            players:players,
+        })
+        this.forward()
+        // if (!this.state.in_game) {
+        //     this.setState({in_game: true}, () => {this.forward()})}
+    }
+
     end(winner, final_length) {
         this.setState({done: winner, final_length: final_length, in_game: false})
     }
@@ -239,12 +262,34 @@ export default class Play extends Component {
         })
     }
 
+    displayButtons(){
+        if (this.state.debugMode){
+            return(
+                <div>
+                    <button className="btn btn-outline-warning mb-2 mr-sm-2" onClick={this.startOne.bind(this)}>🏃 1️</button>
+                    <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEnd.bind(this)}>❌</button>
+                </div>
+            )
+
+        }
+        else{
+            return(
+                <div>
+                    <button className="btn btn-outline-success mb-2 mr-sm-2" onClick={this.start.bind(this)}>🏃‍</button>
+                    <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEndThink.bind(this)}>🤔 ❌</button>
+                    <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEnd.bind(this)}>❌</button>
+                </div>
+            )
+        }
+    }
+
+
+
     componentWillReceiveProps(nextProps) {
         const memory_size = 625
         var memory = this.init(memory_size)
         this.onChangePlayer1Code = this.onChangePlayer1Code.bind(this)
         this.onChangeHover = this.onChangeHover.bind(this)
-        this.onResetHover = this.onResetHover.bind(this)
         this.onMouseToggle = this.onMouseToggle.bind(this)
 
 
@@ -266,8 +311,11 @@ export default class Play extends Component {
             current_step: 1,
             current_player: 0,
             in_game: false,
-            warriors: nextProps.warriors,
-            hoverInfo: ''
+            warriors: nextProps.warriorList,
+            hoverInfo: {},
+            hoverIndex: null,
+            easyMode: nextProps.easyModeBool,
+            debugMode: nextProps.debugModeBool
         })
     }
 
@@ -278,12 +326,10 @@ export default class Play extends Component {
                     <Dropdown options={this.state.warriors} onChange={this.onChangePlayer1Code}  placeholder='Select Opponent ⚔️' />
                 </div>
                 <div className='row mt-2'>
-                    <button className="btn btn-outline-success mb-2 mr-sm-2" onClick={this.start.bind(this)}>🏃‍</button>
-                    <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEndThink.bind(this)}>🤔 ❌</button>
-                    <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEnd.bind(this)}>❌</button>
+                    {this.displayButtons()}
                     <div className="card shadow rounded ml-2">
                         <div className="card-body">
-                            <RenderHoverInfo hoverProp={this.state.hoverInfo}/>
+                            <RenderHoverInfo hoverProp={this.state.hoverInfo} easyModeProp={this.state.easyMode}/>
                         </div>
                     </div>
                     {/*<div className="btn-group dropright">*/}
@@ -306,12 +352,9 @@ export default class Play extends Component {
                                 player_id = {cell.player_id}
                                 index = {cell.index}
                                 key = {cell.index}
-                                // style={{onMouseEnter:this.onMouseToggle,
-                                //         onMouseLeave:this.onMouseToggle,
-                                //     }}
-
+                                indexA = {(this.state.hoverIndex + this.state.hoverInfo.a)%this.state.memory_size}
+                                indexB = {(this.state.hoverIndex + this.state.hoverInfo.a)%this.state.memory_size}
                                 onHover = {this.onChangeHover}
-                                // onUnHover = {this.onResetHover}
                             />
                         ))}
                     </div>
