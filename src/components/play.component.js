@@ -266,7 +266,9 @@ export default class Play extends Component {
         if (this.state.debugMode){
             return(
                 <div>
-                    <button className="btn btn-outline-warning mb-2 mr-sm-2" onClick={this.startOne.bind(this)}>🏃 1️</button>
+                    {/*<button className="btn btn-outline-warning mb-2 mr-sm-2" onClick={this.startOne.bind(this)}>🏃 1️</button>*/}
+                    <button className="btn btn-outline-success mb-2 mr-sm-2" onClick={this.start.bind(this)}>🏃‍</button>
+                    <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEndThink.bind(this)}>🤔 ❌</button>
                     <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEnd.bind(this)}>❌</button>
                 </div>
             )
