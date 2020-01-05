@@ -20,6 +20,9 @@ class Command {
         this.memory_size = memory_size
         this.index = 0
         this.player_id = -1
+        this.is_a = 0
+        this.is_b = 0
+        this.is_p = 0
     }
 
     init(index, player_id) {

@@ -77,7 +77,8 @@ export default class Play extends Component {
         var player2_code = props.p2code
 
         var players = this.make_players(memory, [player1_code, player2_code])
-
+        const {processes, current} = players[0]
+        const address = processes[current]
         this.state = {
             raw_code: [player1_code, player2_code],
             player1Code: player1_code,
@@ -89,6 +90,7 @@ export default class Play extends Component {
             done: null,
             current_step: 1,
             current_player: 0,
+            current_address: address,
             in_game: false,
             warriors: props.warriorList,
             hoverInfo: {},
@@ -99,7 +101,12 @@ export default class Play extends Component {
     }
 
     onChangeHover(memIndex){
-        const instructionValues = this.state.memory[memIndex].values()
+        const mem = this.state.memory[memIndex]
+        let instructionValues = mem.values()
+        const trueB = mem.get_true_index(mem.a, mem.a_am, this.state.memory)
+        const trueA = mem.get_true_index(mem.b, mem.b_am, this.state.memory)
+        instructionValues["trueA"] = trueA
+        instructionValues["trueB"] = trueB
 
         this.setState({
             hoverInfo: instructionValues,
@@ -195,7 +202,7 @@ export default class Play extends Component {
 
     forward(recur=true) {
         const {current_step, current_player, players, game_length, in_game} = this.state
-        const next_player = (current_player === 0 ? 1 : 0)
+        const next_player = (current_player + 1 === players.length ? 0 : current_player + 1)
         console.log(players)
 
         if (current_step === game_length)
@@ -204,9 +211,12 @@ export default class Play extends Component {
             this.end(next_player, current_step)
         else if (in_game) {
             const [new_memory, new_players] = this.step(current_player, players)
+            const {processes, current} = players[next_player]
+            const address = processes[current]
             this.setState({
                 current_step: current_step + 1,
                 current_player: next_player,
+                current_address: address,
                 players: new_players,
                 memory: new_memory,
             })
@@ -225,10 +235,10 @@ export default class Play extends Component {
     }
 
     startOne(){
-        var players = this.make_players(this.state.memory, this.state.raw_code)
-        this.setState({
-            players:players,
-        })
+        // var players = this.make_players(this.state.memory, this.state.raw_code)
+        // this.setState({
+        //     players:players,
+        // })
         this.forward()
         // if (!this.state.in_game) {
         //     this.setState({in_game: true}, () => {this.forward()})}
@@ -299,6 +309,8 @@ export default class Play extends Component {
         console.log(player2_code)
 
         var players = this.make_players(memory, [player1_code, player2_code])
+        const {processes, current} = players[0]
+        const address = processes[current]
         this.setState({
             raw_code: [player1_code, player2_code],
             player1Code: player1_code,
@@ -310,6 +322,7 @@ export default class Play extends Component {
             done: null,
             current_step: 1,
             current_player: 0,
+            current_address: address,
             in_game: false,
             warriors: nextProps.warriorList,
             hoverInfo: {},
@@ -345,18 +358,22 @@ export default class Play extends Component {
                 <br />
                 <div className='col-12 padding-0'>
                     <div className="Board" style={{height: HEIGHT, width: WIDTH}}>
-                        {this.state.memory.map(cell => (
-                            <Cell
+                        {this.state.memory.map((cell, index) => {
+                            const is_a = (index === this.state.hoverInfo["trueA"] ? 1 : 0)
+                            const is_b = (index === this.state.hoverInfo["trueB"] ? 1 : 0)
+                            const is_current = (index === this.state.current_address ? 1 : 0)
+                            return (<Cell
                                 height = {HEIGHT}
                                 width = {WIDTH}
                                 player_id = {cell.player_id}
                                 index = {cell.index}
                                 key = {cell.index}
-                                indexA = {(this.state.hoverIndex + this.state.hoverInfo.a)%this.state.memory_size}
-                                indexB = {(this.state.hoverIndex + this.state.hoverInfo.a)%this.state.memory_size}
+                                indexA = {is_a}
+                                indexB = {is_b}
+                                current = {is_current}
                                 onHover = {this.onChangeHover}
-                            />
-                        ))}
+                            />)
+                        })}
                     </div>
                  </div>
 
