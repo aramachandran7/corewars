@@ -7,22 +7,15 @@ import { Command, Add, Dat, Div, Djn, Jmn,
     Jmp, Jmz, Mod, Mov, Mul, Seq,
     Slt, Sne, Spl, Sub } from  './corewars/instructions'
 import 'bootstrap/dist/js/bootstrap.bundle';
-import Dropdown from 'react-dropdown'
-import 'react-dropdown/style.css'
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+
 
 
 const HEIGHT = 600
 const WIDTH = 800
 const INTERVAL = 0
-
-const Warrior = (props) => {
-    return(
-        <div>
-            {/*<a className="dropdown-item" href="#" value={props.warrior} >{props.warrior.name} | {props.warrior.commandList.length}</a>*/}
-            <button className="dropdown-item" type="button" value={props.warrior}> name: {props.warrior.name} | length: {props.warrior.commandList.length}</button>
-        </div>
-    )
-}
 
 const RenderHoverInfo = (props) => {
     if (props.easyModeProp){
@@ -81,7 +74,7 @@ export default class Play extends Component {
         const address = processes[current]
         this.state = {
             raw_code: [player1_code, player2_code],
-            player1Code: player1_code,
+            player1Code: [new Mov(0, 1, "$", "$", "I", memory_size)],
             memory_size: memory_size,
             memory: memory,
             players: players,
@@ -92,7 +85,8 @@ export default class Play extends Component {
             current_player: 0,
             current_address: address,
             in_game: false,
-            warriors: props.warriorList,
+            // warriors: props.warriorList,
+            warriors: props.exWarriors,
             hoverInfo: {},
             hoverIndex: null,
             easyMode: props.easyModeBool,
@@ -123,6 +117,7 @@ export default class Play extends Component {
         newPlayers[0] = e.target.value;
 
         this.setState({
+            memory: this.init(625),
             raw_code:newPlayers,
             players: this.make_players(this.state.memory, newPlayers),
             player1code: e.target.value
@@ -234,11 +229,14 @@ export default class Play extends Component {
             this.setState({in_game: true}, () => {this.forward()})}
     }
 
+
+    ready(){
+        var players = this.make_players(this.state.memory, this.state.raw_code)
+        this.setState({
+            players:players,
+        })
+    }
     startOne(){
-        // var players = this.make_players(this.state.memory, this.state.raw_code)
-        // this.setState({
-        //     players:players,
-        // })
         this.forward()
         // if (!this.state.in_game) {
         //     this.setState({in_game: true}, () => {this.forward()})}
@@ -266,17 +264,14 @@ export default class Play extends Component {
         })
     }
 
-    warriorListFunc(){
-        this.state.warriors.map(currentWarrior => {
-            return(<Warrior warrior={currentWarrior}/>)
-        })
-    }
 
     displayButtons(){
         if (this.state.debugMode){
             return(
                 <div>
-                    {/*<button className="btn btn-outline-warning mb-2 mr-sm-2" onClick={this.startOne.bind(this)}>🏃 1️</button>*/}
+
+                    {/*<button className="btn btn-outline-warning mb-2 mr-sm-2" onClick={this.ready.bind(this)}>Ready? ✔️‍</button>*/}
+                    {/*<button className="btn btn-outline-success mb-2 mr-sm-2" onClick={this.startOne.bind(this)}>🏃 1️</button>*/}
                     <button className="btn btn-outline-success mb-2 mr-sm-2" onClick={this.start.bind(this)}>🏃‍</button>
                     <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEndThink.bind(this)}>🤔 ❌</button>
                     <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEnd.bind(this)}>❌</button>
@@ -326,7 +321,8 @@ export default class Play extends Component {
             current_player: 0,
             current_address: address,
             in_game: false,
-            warriors: nextProps.warriorList,
+            // warriors: nextProps.warriorList,
+            warriors: nextProps.exWarriors,
             hoverInfo: {},
             hoverIndex: null,
             easyMode: nextProps.easyModeBool,
@@ -338,7 +334,23 @@ export default class Play extends Component {
         return(
             <div className="container">
                 <div className='col-6 mb-2'>
-                    <Dropdown options={this.state.warriors} onChange={this.onChangePlayer1Code}  placeholder='Select Opponent ⚔️' />
+
+
+
+                    {/*<Dropdown options={this.state.warriors} onChange={this.onChangePlayer1Code}  placeholder='Select Opponent ⚔️' />*/}
+
+                    {/*<InputLabel id="exwarrior">Pick an Opponent  ⚔️⠀⠀</InputLabel>*/}
+                    {/*<Select*/}
+                    {/*    labelId="exwarrior"*/}
+                    {/*    id="exwarrior"*/}
+                    {/*    value={this.state.player1Code}*/}
+                    {/*    onChange={this.onChangePlayer1Code}*/}
+                    {/*    className='form-control'*/}
+                    {/*>*/}
+                    {/*    {Object.entries(this.state.warriors).map(entry => (*/}
+                    {/*        <MenuItem value={entry[1]}>{entry[0]}</MenuItem>*/}
+                    {/*    ))}*/}
+                    {/*</Select>*/}
                 </div>
                 <div className='row mt-2'>
                     {this.displayButtons()}
@@ -383,3 +395,5 @@ export default class Play extends Component {
         )
     }
 }
+
+

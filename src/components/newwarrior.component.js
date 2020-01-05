@@ -14,6 +14,18 @@ import Select from '@material-ui/core/Select';
 const memory_size = 625;
 
 
+
+const exampleWarriors = {
+    'My Own': [],
+    'imp': [new Mov(0, 1, "$", "$", "I", memory_size)],
+    'dwarf':[new Add(4, 3, '#','$', 'AB', memory_size),
+        new Mov(2, 2, "$", "@", "I", memory_size),
+        new Jmp(-2, 0,'$', '$', '', memory_size),
+        new Dat(0, 0, '$', '$', '', memory_size)],
+    'LE1':[],
+    'LE2':[],
+}
+
 const displayChosenInstructions = (commandList, onDeleteCommand, easyMode) => {
     // var instructionList = []
     // for (var inc = 0; inc < commandList.length; inc ++) {
@@ -65,35 +77,40 @@ const displayChosenInstructions = (commandList, onDeleteCommand, easyMode) => {
     }
 }
 
-const displayCommandCard = (debugMode, easyMode) =>{
+const displayCommandCard = (debugMode, easyMode, stateMessages) =>{
     if (debugMode || easyMode){
         return(
             <div className='card shadow rounded'>
-                <div className='card-body'>
-                    <h5 className='card-title ml-2 mt-2'>Command Options</h5>
-                    <div className='card-text'>
-                        <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Copy</button>
-                        <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Blank</button>
+                <div className='card-body' style={{maxWidth:'100%', }}>
+                    <h5 className='card-title ml-2 mt-2'>In Game Messages</h5>
+                    <div className='card-text' style={{wordWrap:'break-word'}}>
+                        <p>
+                            {stateMessages}
+                        </p>
                     </div>
-                    <div className='card-text'>
-                        <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Add</button>
-                        <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Subtract</button>
-                        <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Multiply</button>
-                        <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Divide</button>
-                        <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Modulus</button>
-                    </div>
-                    <div className='card-text'>
-                        <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Jump</button>
-                        <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>JumpZ</button>
-                        <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>JumpNZ</button>
-                        <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>DecJumpNZ</button>
-                    </div>
-                    <div className='card-text'>
-                        <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Split</button>
-                        <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>SkipE</button>
-                        <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>SkipNE</button>
-                        <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>SkipL</button>
-                    </div>
+                    {/*<div className='card-text'>*/}
+                    {/*    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Copy</button>*/}
+                    {/*    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Blank</button>*/}
+                    {/*</div>*/}
+                    {/*<div className='card-text'>*/}
+                    {/*    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Add</button>*/}
+                    {/*    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Subtract</button>*/}
+                    {/*    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Multiply</button>*/}
+                    {/*    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Divide</button>*/}
+                    {/*    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Modulus</button>*/}
+                    {/*</div>*/}
+                    {/*<div className='card-text'>*/}
+                    {/*    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Jump</button>*/}
+                    {/*    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>JumpZ</button>*/}
+                    {/*    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>JumpNZ</button>*/}
+                    {/*    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>DecJumpNZ</button>*/}
+                    {/*</div>*/}
+                    {/*<div className='card-text'>*/}
+                    {/*    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>Split</button>*/}
+                    {/*    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>SkipE</button>*/}
+                    {/*    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>SkipNE</button>*/}
+                    {/*    <button className='btn btn-outline-info ml-2 mb-2 mr-sm-2'>SkipL</button>*/}
+                    {/*</div>*/}
                 </div>
             </div>
         )
@@ -119,6 +136,7 @@ export default class NewWarriorComponent extends Component {
         this.onChangeMode = this.onChangeMode.bind(this)
         this.displayInput = this.displayInput.bind(this)
         this.onChangeDebugMode = this.onChangeDebugMode.bind(this)
+        this.onChangeCommandList = this.onChangeCommandList.bind(this)
 
 
 
@@ -139,6 +157,7 @@ export default class NewWarriorComponent extends Component {
             mod:'',
             easyMode: true,
             debugMode: true,
+            message: 'Hover any cell; A field reference bordered with Purple, B: Teal.',
         }
     }
 
@@ -205,23 +224,16 @@ export default class NewWarriorComponent extends Component {
         })
     }
 
+    onChangeCommandList(e){
+        this.setState({
+            commandList: e.target.value
+        })
+    }
+
 
     onDeleteCommand(index){
-        // this command needs to delete a single command from the commandList. However, how do we pass a parameter
-        // (with e, i guess) to specify which item on the list will be delted?
-        // currently it will just delete the last one.
         let newCommandList = this.state.commandList.map(x => (Object.assign(Object.create( Object.getPrototypeOf(x)), x)))
-        // console.log("Old")
-        // console.log(newCommandList)
-        // console.log("Index: " + index)
-        // test:
-        // newCommandList = newCommandList.pop()
         newCommandList.splice(index, 1)
-
-        // const len = newCommandList.length
-        // newCommandList = newCommandList.splice(len-1, 1)
-        // console.log("New")
-        // console.log(newCommandList)
         this.setState({
             commandList: newCommandList,
         })
@@ -249,23 +261,28 @@ export default class NewWarriorComponent extends Component {
 
         if (this.state.easyMode){
             // easy interpreting
-            switch (this.state.cmd){
-                case 'Copy': newCommandList.push(new Mov(this.state.a, this.state.b, '$', '$', 'I', memory_size)); break;
-                case 'Add': newCommandList.push(new Add(this.state.a, this.state.b, '$', '$', 'AB', memory_size)); break;
-                case 'Blank': newCommandList.push(new Dat(this.state.a, this.state.b, '$','$', 'F', memory_size)); break;
-                // case 'Divide': newCommandList.push(new Div(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
-                // case 'DecJumpNZ': newCommandList.push(new Djn(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
-                // case 'JumpNZ': newCommandList.push(new Jmn(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
-                case 'Jump': newCommandList.push(new Jmp(this.state.a, this.state.b, '$', '$', 'B', memory_size)); break;
-                case 'JumpZ': newCommandList.push(new Jmz(this.state.a, this.state.b, '$','$', 'B', memory_size)); break;
-                // case 'SkipL': newCommandList.push(new Slt(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
-                // case 'SkipNE': newCommandList.push(new Sne(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
-                // case 'Split': newCommandList.push(new Spl(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
-                case 'Subtract': newCommandList.push(new Sub(this.state.a, this.state.b, '$', '$', 'AB', memory_size)); break;
-                // case 'Modulus': newCommandList.push(new Mod(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
-                // case 'Multiply': newCommandList.push(new Mul(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
-                // case 'SkipE': newCommandList.push(new Seq(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
-                default: console.log('Command : ' + this.state.cmd + ' not recognized.');
+            if (this.state.a < 0 || this.state.b <0) {
+                this.setState({message: 'Please restructure your warrior to use A and B Values above zero.'})
+            }
+            else {
+                switch (this.state.cmd){
+                    case 'Copy': newCommandList.push(new Mov(this.state.a, this.state.b, '$', '$', 'I', memory_size)); break;
+                    case 'Add': newCommandList.push(new Add(this.state.a, this.state.b, '$', '$', 'AB', memory_size)); break;
+                    case 'Blank': newCommandList.push(new Dat(this.state.a, this.state.b, '$','$', 'F', memory_size)); break;
+                    // case 'Divide': newCommandList.push(new Div(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
+                    // case 'DecJumpNZ': newCommandList.push(new Djn(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
+                    case 'JumpNZ': newCommandList.push(new Jmn(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
+                    case 'Jump': newCommandList.push(new Jmp(this.state.a, this.state.b, '$', '$', '', memory_size)); break;
+                    // case 'JumpZ': newCommandList.push(new Jmz(this.state.a, this.state.b, '$','$', '', memory_size)); break;
+                    // case 'SkipL': newCommandList.push(new Slt(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
+                    // case 'SkipNE': newCommandList.push(new Sne(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
+                    // case 'Split': newCommandList.push(new Spl(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
+                    case 'Subtract': newCommandList.push(new Sub(this.state.a, this.state.b, '$', '$', 'AB', memory_size)); break;
+                    // case 'Modulus': newCommandList.push(new Mod(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
+                    // case 'Multiply': newCommandList.push(new Mul(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
+                    // case 'SkipE': newCommandList.push(new Seq(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
+                    default: console.log('Command : ' + this.state.cmd + ' not recognized.');
+                }
             }
         }
         else{
@@ -344,10 +361,9 @@ export default class NewWarriorComponent extends Component {
                             <MenuItem value={'Add'}>Add</MenuItem>
                             <MenuItem value={'Subtract'}>Subtract</MenuItem>
                             <MenuItem value={'Jump'}>Jump</MenuItem>
-                            <MenuItem value={'JumpZ'}>JumpZ</MenuItem>
+                            <MenuItem value={'JumpNZ'}>JumpNZ</MenuItem>
                         </Select>
                     </div>
-
                     <div className=' col-1 '></div>
                     <div className='form-group col-2'>
                         <TextField className='form-control' variant="outlined" label='A' value={this.state.a} onChange={this.onChangea} />
@@ -428,12 +444,30 @@ export default class NewWarriorComponent extends Component {
                 </div>
                 <div className='row'>
                     <div className='col-md-6'>
-                        <form onSubmit={this.onSubmitName} className='form-inline'>
-                            {/*<label> Warrior Name 🍭 : </label>*/}
-                            <TextField className='form-control ml-2 mb-2 mr-sm-2' size='small' variant="outlined" label='Name Your Warrior 🍭 ' value={this.state.name} onChange={this.onChangeName} />
-                            {/*<input type="text" required className="form-control ml-2 mb-2 mr-sm-2" placeholder='New Warrior' value={this.state.name} onChange={this.onChangeName} />*/}
-                            <button type="submit" className="btn btn-outline-success float-right mb-2 mr-sm-2">✔️</button>
-                        </form>
+
+                        <div className='row'>
+                            <form onSubmit={this.onSubmitName} className='form-inline'>
+
+
+                                <TextField className='form-control ml-2 mb-2 mr-sm-2' size='small' variant="outlined" label='Name Your Warrior 🍭 ' value={this.state.name} onChange={this.onChangeName} />
+                                <button type="submit" className="btn btn-outline-success float-right mb-2 mr-sm-2">✔️</button>
+
+                                <InputLabel id="exwarrior">Pick a Warrior  ⚔️⠀⠀</InputLabel>
+                                <Select
+                                    labelId="exwarrior"
+                                    id="exwarrior"
+                                    value={this.state.commandList}
+                                    onChange={this.onChangeCommandList}
+                                    className='form-control'
+                                >
+                                    {Object.entries(exampleWarriors).map(entry => (
+                                        <MenuItem value={entry[1]}>{entry[0]}</MenuItem>
+                                    ))}
+                                </Select>
+
+                            </form>
+
+                        </div>
 
                         <div className="card shadow rounded">
                             <div className="card-body">
@@ -495,11 +529,17 @@ export default class NewWarriorComponent extends Component {
                         <button type="button" onClick={this.onSave} className="btn btn-outline-success float-right">Totally Finished? Save ✔️</button>
                         <br />
                         <br />
-                        {displayCommandCard(this.state.debugMode, this.state.easyMode)}
+                        {displayCommandCard(this.state.debugMode, this.state.easyMode, this.state.message)}
                     </div>
                     <div className='col-md-6'>
                         {/*<h3></h3>*/}
-                        <PlayComponent warriorList={this.state.warriors} p2code={this.state.commandList} easyModeBool={this.state.easyMode} debugModeBool={this.state.debugMode}/>
+                        <PlayComponent
+                            warriorList={this.state.warriors}
+                            p2code={this.state.commandList}
+                            easyModeBool={this.state.easyMode}
+                            debugModeBool={this.state.debugMode}
+                            exWarriors={exampleWarriors}
+                        />
                     </div>
                 </div>
                 <div className='row'>

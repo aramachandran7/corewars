@@ -17,21 +17,21 @@
     background: #ccc;
     position: absolute;
     box-sizing: border-box;
-    border: 3px solid #873AD4
+    border: 3px solid #009688
 }
 
 .CellB{
     background: #ccc;
     position: absolute;
     box-sizing: border-box;
-    border: 3px solid #E3FF19
+    border: 3px solid #673ab7
 }
 
 .CellC{
     background: #ccc;
     position: absolute;
     box-sizing: border-box;
-    border: 3px solid #008080
+    border: 3px solid #cddc39
 }
 
 .container {
@@ -50,4 +50,11 @@
 
 padding-2{
     padding-left: 0;
+}
+
+.card {
+    max-width: 100%;
+}
+.card-text {
+    word-wrap: break-word;
 }
