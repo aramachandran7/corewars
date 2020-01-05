@@ -49,53 +49,29 @@ export default class Cell extends PureComponent {
         // }
 
 
+        let c
+        if (this.props.indexA === 1)
+            c = "CellA padding-0"
+        else if (this.props.indexB === 1)
+            c = "CellB padding-0"
+        else if (this.props.current === 1)
+            c = "CellC padding-0"
+        else
+            c = "Cell padding-0"
 
-        // if (index == this.props.indexA){
-        //     return (
-        //         <div className="CellA padding-0"
-        //              onMouseEnter = {() => onMouseHover()}
-        //             // onMouseLeave={() => onMouseUnHover()}
-        //              style={{
-        //                  left: `${CELL_SIZE * x + X_OFFSET}px`,
-        //                  top: `${CELL_SIZE * y + Y_OFFSET}px`,
-        //                  width: `${CELL_SIZE}px`,
-        //                  height: `${CELL_SIZE}px`,
-        //                  backgroundColor: `${bg_color}`,
-        //              }}
-        //         />
-        //     )
-        // }
-        // else if (index == this.props.indexB){
-        //     return(
-        //         <div className="CellB padding-0"
-        //              onMouseEnter = {() => onMouseHover()}
-        //             // onMouseLeave={() => onMouseUnHover()}
-        //              style={{
-        //                  left: `${CELL_SIZE * x + X_OFFSET}px`,
-        //                  top: `${CELL_SIZE * y + Y_OFFSET}px`,
-        //                  width: `${CELL_SIZE}px`,
-        //                  height: `${CELL_SIZE}px`,
-        //                  backgroundColor: `${bg_color}`,
-        //              }}
-        //         />
-        //     )
-        //
-        // }
-        // else {
-            return (
-                <div className="Cell padding-0"
-                     onMouseEnter = {() => onMouseHover()}
-                    // onMouseLeave={() => onMouseUnHover()}
-                     style={{
-                         left: `${CELL_SIZE * x + X_OFFSET}px`,
-                         top: `${CELL_SIZE * y + Y_OFFSET}px`,
-                         width: `${CELL_SIZE}px`,
-                         height: `${CELL_SIZE}px`,
-                         backgroundColor: `${bg_color}`,
-                     }}
-                />
-            )
-        // }
+        return (
+            <div className = {c}
+                onMouseEnter = {() => onMouseHover()}
+                // onMouseLeave={() => onMouseUnHover()}
+                style={{
+                    left: `${CELL_SIZE * x + X_OFFSET}px`,
+                    top: `${CELL_SIZE * y + Y_OFFSET}px`,
+                    width: `${CELL_SIZE}px`,
+                    height: `${CELL_SIZE}px`,
+                    backgroundColor: `${bg_color}`,
+                }}
+            />
+        )
 
     }
 }
