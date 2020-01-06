@@ -204,7 +204,7 @@ export default class Play extends Component {
             this.end(-1, game_length)
         else if (players[current_player]["processes"].length === 0)
             this.end(next_player, current_step)
-        else if (in_game) {
+        else if (in_game || !recur) {
             const [new_memory, new_players] = this.step(current_player, players)
             const {processes, current} = players[next_player]
             const address = processes[current]
@@ -221,14 +221,19 @@ export default class Play extends Component {
     }
 
     start() {
-        var players = this.make_players(this.state.memory, this.state.raw_code)
-        this.setState({
-            players:players,
-        })
+        if (this.state.done !== null) {
+            const memory_size = 625
+            var memory = this.init(memory_size)
+            var players = this.make_players(memory, this.state.raw_code)
+            this.setState({
+                memory: memory,
+                players: players,
+                done: null
+            })
+        }
         if (!this.state.in_game) {
             this.setState({in_game: true}, () => {this.forward()})}
     }
-
 
     ready(){
         var players = this.make_players(this.state.memory, this.state.raw_code)
@@ -237,9 +242,21 @@ export default class Play extends Component {
         })
     }
     startOne(){
-        this.forward()
-        // if (!this.state.in_game) {
-        //     this.setState({in_game: true}, () => {this.forward()})}
+        if (!this.state.in_game) {
+            if (this.state.done !== null) {
+                console.log("Ran")
+                const memory_size = 625
+                var memory = this.init(memory_size)
+                var players = this.make_players(memory, this.state.raw_code)
+                this.setState({
+                    memory: memory,
+                    players: players,
+                    done: null
+                }, () => {this.forward(false)})
+            }
+            else
+                this.forward(false)
+        }
     }
 
     end(winner, final_length) {
@@ -248,11 +265,9 @@ export default class Play extends Component {
 
     quickEnd(){
         this.setState({
-            done: null,
+            done: -1,
             final_length: 0,
             in_game: false,
-            memory: this.init(this.state.memory_size)
-
         })
     }
 
@@ -271,7 +286,7 @@ export default class Play extends Component {
                 <div>
 
                     {/*<button className="btn btn-outline-warning mb-2 mr-sm-2" onClick={this.ready.bind(this)}>Ready? ✔️‍</button>*/}
-                    {/*<button className="btn btn-outline-success mb-2 mr-sm-2" onClick={this.startOne.bind(this)}>🏃 1️</button>*/}
+                    {<button className="btn btn-outline-success mb-2 mr-sm-2" onClick={this.startOne.bind(this)}>🏃 1️</button>}
                     <button className="btn btn-outline-success mb-2 mr-sm-2" onClick={this.start.bind(this)}>🏃‍</button>
                     <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEndThink.bind(this)}>🤔 ❌</button>
                     <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEnd.bind(this)}>❌</button>
