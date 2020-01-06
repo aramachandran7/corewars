@@ -22,7 +22,7 @@ const RenderHoverInfo = (props) => {
         return(
             <div>
                 <h5>
-                    Cell Info👉{props.hoverProp.name}  (  {props.hoverProp.a}  ,  {props.hoverProp.b}  )
+                    Cell Info:{props.hoverProp.name}  (  {props.hoverProp.a}  ,  {props.hoverProp.b}  )
                 </h5>
                 {/*<p className="card-text"> <b>Command: {props.hoverProp.name}</b> a_am: <b>{props.hoverProp.a_am}</b> |*/}
                 {/*a: <b>{props.hoverProp.a}</b> | b_am: <b>{props.hoverProp.b_am}</b> |*/}
@@ -60,21 +60,20 @@ export default class Play extends Component {
         this.displayButtons = this.displayButtons.bind(this)
 
         var player1_code = [new Mov(0, 1, "$", "$", "I", memory_size)] // array of commands
-        // var player1_code = props.p1code;
 
         // const player2_code = [new Add(4, 3, '#','$', 'AB', memory_size),
         //     new Mov(2, 2, "$", "@", "I", memory_size),
         //     new Jmp(-2, 0,'$', '$', '', memory_size),
         //     new Dat(0, 0, '$', '$', '', memory_size)]
 
-        var player2_code = props.p2code
+        var raw_code = [player1_code,props.p2code]
 
-        var players = this.make_players(memory, [player1_code, player2_code])
+        var players = this.make_players(memory, raw_code)
         const {processes, current} = players[0]
         const address = processes[current]
         this.state = {
-            raw_code: [player1_code, player2_code],
-            player1Code: [new Mov(0, 1, "$", "$", "I", memory_size)],
+            raw_code: raw_code,
+            player1Code: player1_code,
             memory_size: memory_size,
             memory: memory,
             players: players,
@@ -264,10 +263,12 @@ export default class Play extends Component {
     }
 
     quickEnd(){
+        const memory_size = 625;
         this.setState({
             done: -1,
             final_length: 0,
             in_game: false,
+            memory: this.init(memory_size)
         })
     }
 
@@ -286,9 +287,9 @@ export default class Play extends Component {
                 <div>
 
                     {/*<button className="btn btn-outline-warning mb-2 mr-sm-2" onClick={this.ready.bind(this)}>Ready? ✔️‍</button>*/}
-                    {<button className="btn btn-outline-success mb-2 mr-sm-2" onClick={this.startOne.bind(this)}>🏃 1️</button>}
-                    <button className="btn btn-outline-success mb-2 mr-sm-2" onClick={this.start.bind(this)}>🏃‍</button>
-                    <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEndThink.bind(this)}>🤔 ❌</button>
+                    {<button className="btn btn-outline-warning mb-2 mr-sm-2" onClick={this.startOne.bind(this)}>🏃 1️</button>}
+                    {/*<button className="btn btn-outline-success mb-2 mr-sm-2" onClick={this.start.bind(this)}>🏃‍</button>*/}
+                    {/*<button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEndThink.bind(this)}>🤔 ❌</button>*/}
                     <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEnd.bind(this)}>❌</button>
                 </div>
             )
@@ -298,7 +299,7 @@ export default class Play extends Component {
             return(
                 <div>
                     <button className="btn btn-outline-success mb-2 mr-sm-2" onClick={this.start.bind(this)}>🏃‍</button>
-                    <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEndThink.bind(this)}>🤔 ❌</button>
+                    <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEndThink.bind(this)}>⏸️🤔 </button>
                     <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEnd.bind(this)}>❌</button>
                 </div>
             )
@@ -316,15 +317,12 @@ export default class Play extends Component {
 
 
         var player1_code = [new Mov(0, 1, "$", "$", "I", memory_size)] // array of commands
-        var player2_code = nextProps.p2code
-        console.log(player1_code)
-        console.log(player2_code)
-
-        var players = this.make_players(memory, [player1_code, player2_code])
+        var raw_code = [player1_code, nextProps.p2code]
+        var players = this.make_players(memory, raw_code)
         const {processes, current} = players[0]
         const address = processes[current]
         this.setState({
-            raw_code: [player1_code, player2_code],
+            raw_code:  raw_code,
             player1Code: player1_code,
             memory_size: memory_size,
             memory: memory,

@@ -22,8 +22,19 @@ const exampleWarriors = {
         new Mov(2, 2, "$", "@", "I", memory_size),
         new Jmp(-2, 0,'$', '$', '', memory_size),
         new Dat(0, 0, '$', '$', '', memory_size)],
-    'LE1':[],
-    'LE2':[],
+    'LE1':[
+        new Add(3,1,'$', '$', 'AB', memory_size),
+        new Mov(2,0,'$', '$', 'I', memory_size),
+        new Jmp(623,0,'$', '$', '', memory_size),
+        new Dat(4,0,'$', '$', 'F', memory_size),
+    ],
+    'LE1A':[
+        new Add(4,1,'$', '$', 'AB', memory_size),
+        new Mov(3,0,'$', '$', 'I', memory_size),
+        new Sub(2, 1, '$', '$', 'AB', memory_size),
+        new Jmn(622,16,'$', '$', '', memory_size),
+        new Dat(4,0,'$', '$', 'F', memory_size),
+    ],
 }
 
 const displayChosenInstructions = (commandList, onDeleteCommand, easyMode) => {
