@@ -32,7 +32,7 @@ const exampleWarriors = {
         new Add(4,1,'$', '$', 'AB', memory_size),
         new Mov(3,0,'$', '$', 'I', memory_size),
         new Sub(2, 1, '$', '$', 'AB', memory_size),
-        new Jmn(622,16,'$', '$', '', memory_size),
+        new Jmn(622,16,'$', '#', 'B', memory_size),
         new Dat(4,0,'$', '$', 'F', memory_size),
     ],
 }
@@ -148,6 +148,7 @@ export default class NewWarriorComponent extends Component {
         this.displayInput = this.displayInput.bind(this)
         this.onChangeDebugMode = this.onChangeDebugMode.bind(this)
         this.onChangeCommandList = this.onChangeCommandList.bind(this)
+        this.onSetMessage = this.onSetMessage.bind(this)
 
 
 
@@ -167,7 +168,7 @@ export default class NewWarriorComponent extends Component {
             b_am:'',
             mod:'',
             easyMode: true,
-            debugMode: true,
+            debugMode: false,
             show: true,
             message: 'Hover any cell; A field reference bordered with Purple, B: Teal.',
         }
@@ -248,6 +249,12 @@ export default class NewWarriorComponent extends Component {
         })
     }
 
+    onSetMessage(newMessage){
+        this.setState({
+            message: newMessage
+        })
+    }
+
 
     onDeleteCommand(index){
         let newCommandList = this.state.commandList.map(x => (Object.assign(Object.create( Object.getPrototypeOf(x)), x)))
@@ -289,9 +296,9 @@ export default class NewWarriorComponent extends Component {
                     case 'Blank': newCommandList.push(new Dat(this.state.a, this.state.b, '$','$', 'F', memory_size)); break;
                     // case 'Divide': newCommandList.push(new Div(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
                     // case 'DecJumpNZ': newCommandList.push(new Djn(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
-                    case 'JumpNZ': newCommandList.push(new Jmn(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
+                    case 'JumpNZ': newCommandList.push(new Jmn(this.state.a, this.state.b, '$', '#', 'B', memory_size)); break;
                     case 'Jump': newCommandList.push(new Jmp(this.state.a, this.state.b, '$', '$', '', memory_size)); break;
-                    // case 'JumpZ': newCommandList.push(new Jmz(this.state.a, this.state.b, '$','$', '', memory_size)); break;
+                    // case 'JumpZ': newCommandList.push(new Jmz(this.state.a, this.state.b, '$','#', '', memory_size)); break;
                     // case 'SkipL': newCommandList.push(new Slt(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
                     // case 'SkipNE': newCommandList.push(new Sne(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
                     // case 'Split': newCommandList.push(new Spl(this.state.a, this.state.b, '$', '$', this.state.mod, memory_size)); break;
@@ -565,6 +572,7 @@ export default class NewWarriorComponent extends Component {
                             easyModeBool={this.state.easyMode}
                             debugModeBool={this.state.debugMode}
                             exWarriors={exampleWarriors}
+                            messageChange={this.onSetMessage}
                         />
                     </div>
                 </div>

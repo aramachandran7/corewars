@@ -15,7 +15,6 @@ const Y_OFFSET = Math.floor((HEIGHT - CELL_SIZE * ROWS) / 2)
 
 export default class Cell extends PureComponent {
     render() {
-        console.log("Rendered")
         const { index, player_id, } = this.props
         const x = Math.floor(index / ROWS)
         const y = index % ROWS
@@ -35,9 +34,6 @@ export default class Cell extends PureComponent {
         }
         const onMouseHover = ()=>{
             this.props.onHover(index)
-            console.log('indexA: ' + this.props.indexA)
-            console.log('indexB: ' + this.props.indexB)
-            console.log('index: ' + index)
         }
 
         // const onMouseUnHover = () => {

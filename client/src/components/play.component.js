@@ -71,6 +71,7 @@ export default class Play extends Component {
         var players = this.make_players(memory, raw_code)
         const {processes, current} = players[0]
         const address = processes[current]
+
         this.state = {
             raw_code: raw_code,
             player1Code: player1_code,
@@ -91,6 +92,10 @@ export default class Play extends Component {
             easyMode: props.easyModeBool,
             debugMode: props.debugModeBool
         }
+    }
+
+    onSetMessage(newMessage){
+        this.props.messageChange(newMessage)
     }
 
     onChangeHover(memIndex){
@@ -205,7 +210,7 @@ export default class Play extends Component {
             this.end(next_player, current_step)
         else if (in_game || !recur) {
             const [new_memory, new_players] = this.step(current_player, players)
-            const {processes, current} = players[next_player]
+            const {processes, current} = new_players[next_player]
             const address = processes[current]
             this.setState({
                 current_step: current_step + 1,
@@ -219,19 +224,62 @@ export default class Play extends Component {
         }
     }
 
-    start() {
-        if (this.state.done !== null) {
-            const memory_size = 625
-            var memory = this.init(memory_size)
-            var players = this.make_players(memory, this.state.raw_code)
+
+    playPause(){
+        if (this.state.in_game){
+            //quickendthink()
             this.setState({
-                memory: memory,
-                players: players,
-                done: null
+                done: null,
+                final_length:0,
+                in_game:false,
             })
         }
-        if (!this.state.in_game) {
-            this.setState({in_game: true}, () => {this.forward()})}
+        else if (!this.state.in_game){
+            //start()
+            if (this.state.raw_code[1].length === 0 ) {
+                this.onSetMessage('Please add a command to your warrior before running code! ')
+            }
+            else {
+                if (this.state.done !== null) {
+                    const memory_size = 625
+                    var memory = this.init(memory_size)
+                    var players = this.make_players(memory, this.state.raw_code)
+                    this.setState({
+                        memory: memory,
+                        players: players,
+                        done: null
+                    })
+                }
+                if (!this.state.in_game) {
+                    this.setState({in_game: true}, () => {
+                        this.forward()
+                    })
+                }
+            }
+        }
+    }
+
+    start() {
+        if (this.state.raw_code[1].length === 0 ) {
+            this.onSetMessage('Please add a command to your warrior before running code! ')
+        }
+        else {
+            if (this.state.done !== null) {
+                const memory_size = 625
+                var memory = this.init(memory_size)
+                var players = this.make_players(memory, this.state.raw_code)
+                this.setState({
+                    memory: memory,
+                    players: players,
+                    done: null
+                })
+            }
+            if (!this.state.in_game) {
+                this.setState({in_game: true}, () => {
+                    this.forward()
+                })
+            }
+        }
     }
 
     ready(){
@@ -241,20 +289,26 @@ export default class Play extends Component {
         })
     }
     startOne(){
-        if (!this.state.in_game) {
-            if (this.state.done !== null) {
-                console.log("Ran")
-                const memory_size = 625
-                var memory = this.init(memory_size)
-                var players = this.make_players(memory, this.state.raw_code)
-                this.setState({
-                    memory: memory,
-                    players: players,
-                    done: null
-                }, () => {this.forward(false)})
+        if (this.state.raw_code[1].length === 0 ) {
+            this.onSetMessage('Please add a command to your warrior before running code! ')
+        }
+        else {
+            if (!this.state.in_game) {
+                if (this.state.done !== null) {
+                    console.log("Ran")
+                    const memory_size = 625
+                    var memory = this.init(memory_size)
+                    var players = this.make_players(memory, this.state.raw_code)
+                    this.setState({
+                        memory: memory,
+                        players: players,
+                        done: null
+                    }, () => {
+                        this.forward(false)
+                    })
+                } else
+                    this.forward(false)
             }
-            else
-                this.forward(false)
         }
     }
 
@@ -298,8 +352,10 @@ export default class Play extends Component {
         else{
             return(
                 <div>
-                    <button className="btn btn-outline-success mb-2 mr-sm-2" onClick={this.start.bind(this)}>🏃‍</button>
-                    <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEndThink.bind(this)}>⏸️🤔 </button>
+                    {<button className="btn btn-outline-success mb-2 mr-sm-2" onClick={this.playPause.bind(this)}>▶️⏸️</button>}
+
+                    {/*<button className="btn btn-outline-success mb-2 mr-sm-2" onClick={this.start.bind(this)}>🏃‍</button>*/}
+                    {/*<button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEndThink.bind(this)}>⏸️🤔 </button>*/}
                     <button className="btn btn-outline-danger ml-2 mb-2 mr-sm-2" onClick={this.quickEnd.bind(this)}>❌</button>
                 </div>
             )
@@ -339,7 +395,7 @@ export default class Play extends Component {
             hoverInfo: {},
             hoverIndex: null,
             easyMode: nextProps.easyModeBool,
-            debugMode: nextProps.debugModeBool
+            debugMode: nextProps.debugModeBool,
         })
     }
 

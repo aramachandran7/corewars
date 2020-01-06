@@ -29,9 +29,9 @@
   },
   "scripts": {
     "start": "cd  && react-scripts start",
-    "build": "../node_modules/.bin/react-scripts build",
-    "test": "../node_modules/.bin/react-scripts test",
-    "eject": "../node_modules/.bin/react-scripts eject"
+    "build": "./node_modules/.bin/react-scripts build",
+    "test": "./node_modules/.bin/react-scripts test",
+    "eject": "./node_modules/.bin/react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -48,5 +48,9 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:8000"
+  "proxy": "http://localhost:8000",
+  "devDependencies": { "surge": "latest", "git-scripts": "0.2.1" },
+  "git": {
+    "scripts": { "pre-push": "surge --project ./ --domain corewarstechalpha.surge.sh" }
+    }
 }
