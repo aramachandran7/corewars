@@ -10,6 +10,7 @@ import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import Modal from './instructionModal.component'
 
 const memory_size = 625;
 
@@ -157,6 +158,7 @@ export default class NewWarriorComponent extends Component {
             mod:'',
             easyMode: true,
             debugMode: true,
+            showInstructions: true,
             message: 'Hover any cell; A field reference bordered with Purple, B: Teal.',
         }
     }
@@ -173,6 +175,14 @@ export default class NewWarriorComponent extends Component {
             })
             .catch(err=>console.log(err))
     }
+
+    showModal = () => {
+        this.setState({ showInstructions: true });
+    };
+
+    hideModal = () => {
+        this.setState({ showInstructions: false });
+    };
 
     onChangeName(e){
         this.setState({
@@ -378,6 +388,11 @@ export default class NewWarriorComponent extends Component {
         else {
             return (
                 <div className='row'>
+                    <Modal show={this.state.show} handleClose={this.hideModal}>
+                        <p>Modal</p>
+                        <p>Data</p>
+                    </Modal>
+
                     <div className='form-group col-2 padding-1'>
                         <input required className="form-control input-group-sm" type="text" placeholder='Cmd'
                                value={this.state.cmd} onChange={this.onChangeCmd}/>
@@ -526,6 +541,7 @@ export default class NewWarriorComponent extends Component {
                             </div>
                         </div>
                         <br />
+                        <button type="button" onClick={this.showModal} className="btn btn-outline-warning float-left">Show Instructions  📃 </button>
                         <button type="button" onClick={this.onSave} className="btn btn-outline-success float-right">Totally Finished? Save ✔️</button>
                         <br />
                         <br />
