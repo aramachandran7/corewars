@@ -1,7 +1,6 @@
 //React play page
 
 import React, {Component} from "react"
-// import { Link } from 'react-router-dom'
 import Cell from  './corewars/canvas.component'
 import { Command, Add, Dat, Div, Djn, Jmn,
     Jmp, Jmz, Mod, Mov, Mul, Seq,

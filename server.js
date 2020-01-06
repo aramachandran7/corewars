@@ -13,7 +13,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(cors())
 app.use(express.json())
-
+app.use(express.static(path.join(__dirname, "client", "build")))
 
 // Routing
 const playRouter = require('./routes/play')
@@ -21,15 +21,19 @@ app.use('/play/', playRouter)
 
 // MGDB setup
 // mongodb+srv://aramachandran:Belur108@usertesting-cdidq.mongodb.net/test?retryWrites=true&w=majority
-var db = 'mongodb+srv://aramachandran:Belur108@warriorscluster-bwcic.mongodb.net/test?retryWrites=true&w=majority';
-// db = process.env.ATLAS_URI
+// var db = 'mongodb+srv://aramachandran:Belur108@warriorscluster-bwcic.mongodb.net/test?retryWrites=true&w=majority';
+var db = process.env.ATLAS_URI
+console.log(db)
 mongoose.connect(db,{ useNewUrlParser: true })
     .then(() => console.log("MongoDB successfully connected"))
     .catch(err => console.log(err));
 
-const port2 = 5000;
 // port setup
-const port = 3000;
+const port = process.env.PORT || 3000;
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
+
 app.listen(port, () => {
     console.log(`Server is running at port ${port}`)
 }) // this starts the server, listens on certain port

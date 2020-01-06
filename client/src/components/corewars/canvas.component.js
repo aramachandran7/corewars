@@ -1,8 +1,4 @@
 import React, {PureComponent} from "react"
-// import { Link } from 'react-router-dom'
-// import { Command, Add, Dat, Div, Djn, Jmn,
-//     Jmp, Jmz, Mod, Mov, Mul, Seq,
-//     Slt, Sne, Spl, Sub } from  './instructions'
 import "./canvas.component.css"
 
 

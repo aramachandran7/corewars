@@ -13,6 +13,7 @@
 
 .env
 # misc
+.idea
 
 /client/node_modules
 .DS_Store

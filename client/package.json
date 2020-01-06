@@ -24,7 +24,8 @@
     "react-dropdown": "^1.6.4",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
-    "typescript": "^3.7.3"
+    "typescript": "^3.7.3",
+    "prop-types": "latest"
   },
   "scripts": {
     "start": "cd  && react-scripts start",
@@ -46,5 +47,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost:8000"
 }
