@@ -206,7 +206,7 @@ export default class Play extends Component {
             this.end(next_player, current_step)
         else if (in_game || !recur) {
             const [new_memory, new_players] = this.step(current_player, players)
-            const {processes, current} = players[next_player]
+            const {processes, current} = new_players[next_player]
             const address = processes[current]
             this.setState({
                 current_step: current_step + 1,
