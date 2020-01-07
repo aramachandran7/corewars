@@ -15,13 +15,6 @@ export default class Navbar extends PureComponent {
                     </button>
                     <div className="collapse navbar-collapse" id="navbarResponsive">
                         <ul className="navbar-nav ml-auto">
-                            <li className='nav-item'>
-                                <a href='../downloads/hype.txt' className='nav-link' download>
-                                    <button type="button" className="btn btn-outline-light">
-                                        Instructions ⬇️
-                                    </button>
-                                </a>
-                            </li>
                             <li className="nav-item">
                                 <Link className="nav-link" to='/play/'>
                                     <button type="button" className="btn btn-outline-light">Leaderboard 📈️ </button>

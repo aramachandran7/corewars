@@ -1,37 +1,30 @@
 {
-  "name": "corewarssimple",
-  "version": "0.1.0",
+  "name": "client",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.8.2",
+    "@material-ui/icons": "^4.5.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.0",
-    "body-parser": "^1.19.0",
     "bootstrap": "^4.4.1",
-    "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "express-session": "^1.17.0",
-    "jquery": "^3.4.1",
-    "mongoose": "^5.8.1",
-    "passport": "^0.4.1",
-    "passport-auth0": "^1.3.1",
-    "popper.js": "^1.16.0",
+    "clsx": "^1.0.4",
+    "prop-types": "latest",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-dropdown": "^1.6.4",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
     "typescript": "^3.7.3",
-    "prop-types": "latest"
+    "jquery": "^3.4.1"
   },
   "scripts": {
-    "start": "cd  && react-scripts start",
-    "build": "./node_modules/.bin/react-scripts build",
-    "test": "./node_modules/.bin/react-scripts test",
-    "eject": "./node_modules/.bin/react-scripts eject"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -49,8 +42,9 @@
     ]
   },
   "proxy": "http://localhost:8000",
-  "devDependencies": { "surge": "latest", "git-scripts": "0.2.1" },
   "git": {
-    "scripts": { "pre-push": "surge --project ./ --domain corewarstechalpha.surge.sh" }
+    "scripts": {
+      "pre-push": "surge --project ./ --domain corewarstechalpha.surge.sh"
     }
+  }
 }

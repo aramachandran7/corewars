@@ -3,17 +3,19 @@ import axios from 'axios'
 import { Command, Add, Dat, Div, Djn, Jmn,
     Jmp, Jmz, Mod, Mov, Mul, Seq,
     Slt, Sne, Spl, Sub } from "./corewars/instructions";
+
 import PlayComponent from './play.component'
-import './corewars/canvas.component.css'
+import ModalComponent from './newmodal.component'
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
+import './corewars/canvas.component.css'
+
+
 const memory_size = 625;
-
-
 
 const exampleWarriors = {
     'My Own': [],
@@ -37,13 +39,10 @@ const exampleWarriors = {
     ],
 }
 
-const displayChosenInstructions = (commandList, onDeleteCommand, easyMode) => {
-    // var instructionList = []
-    // for (var inc = 0; inc < commandList.length; inc ++) {
-    //     // instructionList.push(renderInstruction(commandList[inc]))
-    //     instructionList.push(commandList[inc]);
-    // }
 
+
+
+const displayChosenInstructions = (commandList, onDeleteCommand, easyMode) => {
     if (commandList.length === 0){}
     else {
         if (easyMode){
@@ -403,12 +402,6 @@ export default class NewWarriorComponent extends Component {
         else {
             return (
                 <div className='row'>
-                    {/*<Modal show={this.state.showInstructions} handleClose={this.hideModal}>*/}
-                    {/*    <p>Modal</p>*/}
-                    {/*    <p>Data</p>*/}
-                    {/*</Modal>*/}
-
-
                     <div className='form-group col-2 padding-1'>
                         <input required className="form-control input-group-sm" type="text" placeholder='Cmd'
                                value={this.state.cmd} onChange={this.onChangeCmd}/>
@@ -444,6 +437,8 @@ export default class NewWarriorComponent extends Component {
         return(
             <div className='container'>
                 <div className='row'>
+
+                    <ModalComponent show={this.state.show} handleClose={this.showModal} />
                     <br />
                     <div className='col-6'>
                         <h1>
