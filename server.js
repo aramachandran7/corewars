@@ -22,14 +22,15 @@ app.use('/play/', playRouter)
 // MGDB setup
 // mongodb+srv://aramachandran:Belur108@usertesting-cdidq.mongodb.net/test?retryWrites=true&w=majority
 // var db = 'mongodb+srv://aramachandran:Belur108@warriorscluster-bwcic.mongodb.net/test?retryWrites=true&w=majority';
-var db = process.env.ATLAS_URI
+var db = process.env.MONGODB_URI || process.env.ATLAS_URI
+
 console.log(db)
 mongoose.connect(db,{ useNewUrlParser: true })
     .then(() => console.log("MongoDB successfully connected"))
     .catch(err => console.log(err));
 
 // port setup
-const port = process.env.PORT || 3000;
+    const port = process.env.PORT || 3000;
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "client", "build", "index.html"));
 });

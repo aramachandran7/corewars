@@ -18,7 +18,10 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
+
   },
   "repository": {
     "type": "git",
@@ -28,5 +31,8 @@
   "bugs": {
     "url": "https://github.com/aramachandran7/corewars/issues"
   },
-  "homepage": "https://github.com/aramachandran7/corewars#readme"
+  "homepage": "https://github.com/aramachandran7/corewars#readme",
+  "engines": {
+  "node": "12.13.0"
+  }
 }
