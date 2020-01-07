@@ -5,7 +5,7 @@ import { Command, Add, Dat, Div, Djn, Jmn,
     Slt, Sne, Spl, Sub } from "./corewars/instructions";
 
 import PlayComponent from './play.component'
-import ModalComponent from './newmodal.component'
+import ModalComponent from './modal.component'
 import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
