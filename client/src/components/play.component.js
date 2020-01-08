@@ -364,41 +364,45 @@ export default class Play extends Component {
 
 
     componentDidUpdate(prevProps) {
-        console.log(this.props.p2code)
-        if (this.props.p2code.length === this.state.raw_code[1].length)
-            return
-        const memory_size = 625
-        var memory = this.init(memory_size)
         this.onChangePlayer1Code = this.onChangePlayer1Code.bind(this)
         this.onChangeHover = this.onChangeHover.bind(this)
         this.onMouseToggle = this.onMouseToggle.bind(this)
 
-
-        var player1_code = [new Mov(0, 1, "$", "$", "I", memory_size)] // array of commands
-        var raw_code = [player1_code, this.props.p2code]
-        var players = this.make_players(memory, raw_code)
-        const {processes, current} = players[0]
-        const address = processes[current]
-        this.setState({
-            raw_code:  raw_code,
-            player1Code: player1_code,
-            memory_size: memory_size,
-            memory: memory,
-            players: players,
-            game_length: 2000,
-            final_length: 0,
-            done: null,
-            current_step: 1,
-            current_player: 0,
-            current_address: address,
-            in_game: false,
-            // warriors: nextProps.warriorList,
-            warriors: this.props.exWarriors,
-            hoverInfo: {},
-            hoverIndex: null,
-            easyMode: this.props.easyModeBool,
-            debugMode: this.props.debugModeBool,
-        })
+        if (this.props.p2code.length !== this.state.raw_code[1].length) {
+            const memory_size = 625
+            var memory = this.init(memory_size)
+            var player1_code = [new Mov(0, 1, "$", "$", "I", memory_size)] // array of commands
+            var raw_code = [player1_code, this.props.p2code]
+            var players = this.make_players(memory, raw_code)
+            const {processes, current} = players[0]
+            const address = processes[current]
+            this.setState({
+                raw_code:  raw_code,
+                player1Code: player1_code,
+                memory_size: memory_size,
+                memory: memory,
+                players: players,
+                game_length: 2000,
+                final_length: 0,
+                done: null,
+                current_step: 1,
+                current_player: 0,
+                current_address: address,
+                in_game: false,
+                // warriors: nextProps.warriorList,
+                warriors: this.props.exWarriors,
+                hoverInfo: {},
+                hoverIndex: null,
+                easyMode: this.props.easyModeBool,
+                debugMode: this.props.debugModeBool,
+            })
+        }
+        else if (this.props.easyModeBool !== prevProps.easyModeBool || this.props.debugModeBool !== prevProps.debugModeBool){
+            this.setState({
+                easyMode: this.props.easyModeBool,
+                debugMode: this.props.debugModeBool,
+            })
+        }
     }
 
     render(){
