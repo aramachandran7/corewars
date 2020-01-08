@@ -10,6 +10,7 @@ import Footer from './components/footer.component'
 import indexComponent from "./components/index.component"
 import WarriorsComponent from "./components/warriors.component"
 import NewWarriorComponent from './components/newwarrior.component'
+import FeedbackComponent from "./components/feedback.component";
 // import EditWarriorComponent from './components/editwarrior.component'
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
                 <Route exact path="/" component={indexComponent} />
                 <Route exact path="/play" component={WarriorsComponent} />
                 <Route path="/play/new" component={NewWarriorComponent} />
+                <Route path='/feedback' component={FeedbackComponent}/>
                 {/*<Route path="/play/edit" component={playEditComponent} />*/}
                 <Footer />
             </div>

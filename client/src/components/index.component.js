@@ -14,6 +14,9 @@ export default function IndexComponent(){
                         <p>We're still in a super early dev stage, and are super open to feedback, comments, and concerns. Thanks for your patience & support!</p>
                         <p>We're also not mobile freindly yet! Workin' on it! 😉 </p>
                         <br />
+                        <Link to='/feedback'>
+                            <button type="button" className="btn btn-outline-success mb-2 mr-sm-2">feedback! 🔄️</button>
+                        </Link>
                         <Link to="/play/">
                             <button type="button" className="btn btn-outline-success mb-2 mr-sm-2">Leaderboard  📈  </button>
                         </Link>
@@ -23,8 +26,6 @@ export default function IndexComponent(){
                         <br />
                         <br />
                         <br />
-                        <modalComponent />
-
                     </div>
                 </div>
             </div>
