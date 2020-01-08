@@ -322,7 +322,6 @@ export default class Play extends Component {
             done: -1,
             final_length: 0,
             in_game: false,
-            memory: this.init(memory_size)
         })
     }
 
@@ -364,7 +363,10 @@ export default class Play extends Component {
 
 
 
-    componentWillReceiveProps(nextProps) {
+    componentDidUpdate(prevProps) {
+        console.log(this.props.p2code)
+        if (this.props.p2code.length === this.state.raw_code[1].length)
+            return
         const memory_size = 625
         var memory = this.init(memory_size)
         this.onChangePlayer1Code = this.onChangePlayer1Code.bind(this)
@@ -373,7 +375,7 @@ export default class Play extends Component {
 
 
         var player1_code = [new Mov(0, 1, "$", "$", "I", memory_size)] // array of commands
-        var raw_code = [player1_code, nextProps.p2code]
+        var raw_code = [player1_code, this.props.p2code]
         var players = this.make_players(memory, raw_code)
         const {processes, current} = players[0]
         const address = processes[current]
@@ -391,11 +393,11 @@ export default class Play extends Component {
             current_address: address,
             in_game: false,
             // warriors: nextProps.warriorList,
-            warriors: nextProps.exWarriors,
+            warriors: this.props.exWarriors,
             hoverInfo: {},
             hoverIndex: null,
-            easyMode: nextProps.easyModeBool,
-            debugMode: nextProps.debugModeBool,
+            easyMode: this.props.easyModeBool,
+            debugMode: this.props.debugModeBool,
         })
     }
 
