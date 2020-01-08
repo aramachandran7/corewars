@@ -586,7 +586,7 @@ export default class NewWarriorComponent extends Component {
                         <br />
                         <button type="button" onClick={this.showModal} className="btn btn-outline-warning float-left">Show Instructions  📃 </button>
 
-                        <button type="button" onClick={this.onSave} className="btn btn-outline-success float-right">Totally Finished? Save ✔️</button>
+                        <button type="button" onClick={this.onSave} className="btn btn-outline-success float-right" disabled >Totally Finished? Save ✔️</button>
                         <br />
                         <br />
                         {displayCommandCard(this.state.debugMode, this.state.easyMode, this.state.message)}

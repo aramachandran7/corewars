@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
+import CardActions from "@material-ui/core/CardActions";
 export default function IndexComponent(){
         return(
             <div className="container">
@@ -10,6 +11,7 @@ export default function IndexComponent(){
                 </div>
                 <div className="row">
                     <div className="col-6">
+                        <h2> Please make sure you're viewing us at our <a href='https://corewarstechalpha.herokuapp.com/' rel='noopener noreferrer' target='_blank'>Heroku Page</a>!</h2>
                         <h3>Thanks for checking us out!</h3>
                         <p>We're still in a super early dev stage, and are super open to feedback, comments, and concerns. Thanks for your patience & support!</p>
                         <p>We're also not mobile freindly yet! Workin' on it! 😉 </p>
