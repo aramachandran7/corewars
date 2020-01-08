@@ -10,9 +10,13 @@ import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import IconButton from '@material-ui/core/IconButton';
+import FullscreenIcon from '@material-ui/icons/Fullscreen';
+import FullscreenExitIcon from '@material-ui/icons/FullscreenExit';
 import Select from '@material-ui/core/Select';
 
 import './corewars/canvas.component.css'
+import {element} from "prop-types";
 
 
 const memory_size = 625;
@@ -254,6 +258,28 @@ export default class NewWarriorComponent extends Component {
         })
     }
 
+    goFullScreen(){
+        if (document.fullscreenElement){
+            document.exitFullscreen()
+        }
+        else {
+            document.documentElement.requestFullscreen()
+            // document.body.requestFullscreen()
+        }
+    }
+    displayFullScreenIcon(){
+        if (document.fullscreenElement){
+            return(
+                <FullscreenExitIcon />
+            )
+        }
+        else {
+            return (
+                <FullscreenIcon />
+            )
+        }
+    }
+
 
     onDeleteCommand(index){
         let newCommandList = this.state.commandList.map(x => (Object.assign(Object.create( Object.getPrototypeOf(x)), x)))
@@ -464,6 +490,12 @@ export default class NewWarriorComponent extends Component {
                                 color="primary"
                                 inputProps={{ 'aria-label': 'primary checkbox' }}
                             />
+                        {/*    button for fullscreen */}
+                        {/*    <button type="button" onClick={this.showModal} className="btn btn-outline-secondary">  📃 </button>*/}
+                            <IconButton aria-label="add to favorites"
+                            onClick={this.goFullScreen}>
+                                {this.displayFullScreenIcon()}
+                            </IconButton>
                         </h3>
                     </div>
                     <br />
