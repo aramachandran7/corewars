@@ -322,6 +322,7 @@ export default class Play extends Component {
             done: -1,
             final_length: 0,
             in_game: false,
+            memory: this.init(memory_size)
         })
     }
 
