@@ -35,6 +35,7 @@ export default function Modal({ handleClose, show }) {
     const classes = useStyles();
 
     return (
+	    <div class="contanier">
         <div className={showHideClassName} >
             <Card className={classes.card}>
                 <CardContent>
@@ -45,6 +46,7 @@ export default function Modal({ handleClose, show }) {
                         </Typography>
                         <CardActions>
                             <button type="button" onClick={handleClose} className="btn btn-outline-warning float-right">Close Instructions  📃 </button>
+	    			<div class="topright"><button type="button" onClick={handleClose} class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>
                             <a href='https://docs.google.com/document/d/1yzjQt1JK4jxCi0L0___yNli0lk3kd6USKuilNhceUYM/edit?usp=sharing' rel='noopener noreferrer' target='_blank'><button type="button" className="btn btn-outline-warning float-right">View Full Guide  📃 </button></a>
                             <a href='http://vyznev.net/corewar/guide.html' rel='noopener noreferrer' target='_blank'><button type="button" className="btn btn-outline-warning float-right">View Original Guide  📃 </button></a>
 
@@ -57,6 +59,7 @@ export default function Modal({ handleClose, show }) {
 
             </Card>
         </div>
+	    </div>
     );
 };
 
