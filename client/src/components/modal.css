@@ -1,4 +1,15 @@
-
+.container {
+        position: relative;
+        }
+.topright {
+        position: absolute;
+        top: 8px;
+        right: 16px;
+        font-size: 180px;
+        }
+.close{
+	font-size:100px
+	}
 
 .modal {
     position: fixed;
