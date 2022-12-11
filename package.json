@@ -8,7 +8,7 @@
     "node-core-lib": "^0.11.11",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-session": "^1.17.0",
     "jquery": "^3.4.1",
     "mongoose": "^5.8.1",
